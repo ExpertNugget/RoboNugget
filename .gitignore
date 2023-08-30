@@ -1,9 +1,4 @@
 config.toml
 .vscode/settings.json
 data/users.json
-<<<<<<< HEAD
-=======
 README.md
-
-README.md
->>>>>>> 396ddb4 (fixes)
