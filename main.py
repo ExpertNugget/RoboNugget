@@ -48,7 +48,7 @@ async def on_ready():
 
 
 @link.command(name='mincraft', description='Link your minecraft account to discord')
-async def mincraft(ctx, code: int):
+async def mincraft(ctx, code: discord.Option(int)):
     code = str(code)
     with open("config.toml", "r") as f:
         data = toml.load(f)
@@ -82,7 +82,7 @@ async def mincraft(ctx, code: int):
 @info.command(
     name="lookup",
     description="[WIP] Shows all logged data on a given user")
-async def lookup(ctx, user: discord.Member):
+async def lookup(ctx, user: discord.Option(discord.Member)):
     with open('./data/users.json') as f:
         raw_data = json.load(f)
     try:
