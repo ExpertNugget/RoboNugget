@@ -47,7 +47,7 @@ async def on_ready():
     print(f"{bot.user} is ready and online!")
 
 
-@link.command(name='mincraft', description='Link your minecraft account to discord')
+@link.command(name='minecraft', description='Link your minecraft account to discord')
 async def mincraft(ctx, code: discord.Option(int)):
     code = str(code)
     with open("config.toml", "r") as f:
@@ -70,6 +70,7 @@ async def mincraft(ctx, code: discord.Option(int)):
         trimmed_uuid = uuid.replace("-", "")
         with open('./data/users.json', 'r') as f:
             data = json.load(f)
+        data = raw_data['data'][f'{user.id}']
         data['data'][f'{ctx.author.id}']['mc-uuid'] = f'{trimmed_uuid}'
         with open("./data/users.json", 'w') as f:
             json.dump(data, f, indent=2)
@@ -86,9 +87,9 @@ async def lookup(ctx, user: discord.Option(discord.Member)):
     with open('./data/users.json') as f:
         raw_data = json.load(f)
     try:
-        user_data = raw_data['data'][f'{user.id}']
-        if user_data['mc-uuid'] != None:
-            uuid = user_data['mc-uuid']
+        data = raw_data['data'][f'{user.id}']
+        if data['mc-uuid'] != None:
+            uuid = data['mc-uuid']
             player = MCUUID(uuid=f'{uuid}')
             embed = discord.Embed(title=f'{user}\'s Profile',
                                   description=f'Minecraft Username {player.name}')
@@ -97,7 +98,7 @@ async def lookup(ctx, user: discord.Option(discord.Member)):
                                   description="This user has no linked accounts")
         await ctx.respond(embed=embed)
     except:  # this should make a new json object under data with the set to `user.id`
-        data['data'] = f'{user.id}'
+        raw_data['data'] = f'{user.id}'
         with open('./data/users.json', 'w') as f:
             json.dump(data, f, indent=2)
         embed = discord.Embed(
