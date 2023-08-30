@@ -13,7 +13,7 @@ link = bot.create_group("link")
 # Config template
 config = {
     'Config': {
-        'VERSION': '2'
+        'VERSION': '3'
     },
     'Discord': {
         'TOKEN': ''
@@ -37,7 +37,7 @@ elif os.path.isfile('config.toml'):
     with open('config.toml', 'r') as f:
         data = toml.load(f)
     version = data['Config']['VERSION']
-    if version != '2':
+    if version != '3':
         print('Error: Config version is outdated, rename your `config.toml` file or move to another folder and resart the bot')
         exit()
 
