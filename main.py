@@ -30,7 +30,7 @@ elif os.path.isfile('config.toml'):
     with open('config.toml', 'r') as f:
         data = toml.load(f)
     version = data['Config']['VERSION']
-    if version != '1':
+    if version != '2':
         print('Error: Config version is outdated, rename your `config.toml` file or move to another folder and resart the bot')
         exit()
 
