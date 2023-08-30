@@ -74,31 +74,36 @@ async def mincraft(ctx, code: int):
         with open("./data/users.json", 'w') as f:
             json.dump(data, f, indent=2)
         player = MCUUID(uuid=trimmed_uuid)
-        await ctx.respond(f"Minecraft account \"{player.name}\" linked to user <@{ctx.author.id}>!")
+        await ctx.respond(f"Minecraft account \"{player.name}\" linked to user {ctx.author}!")
     else:
         await ctx.respond("Invalid code.")
 
 
-@info.command(name="lookup",
-                   description="[WIP] Shows all logged data on a given user")
+@info.command(
+    name="lookup",
+    description="[WIP] Shows all logged data on a given user")
 async def lookup(ctx, user: discord.Member):
-    with open('./data/users.json') as access_json:
-        raw_data = json.load(access_json)
-        try:
-            user_data = raw_data['data'][f'{user.id}']
-            if user_data['mc-uuid'] != None:
-                uuid = user_data['mc-uuid']
-                player = MCUUID(uuid=f'{uuid}')
-                embed = discord.Embed(title=f'{user}\'s Profile',
-                                      description=f'Minecraft Username {player.name}')
-            else:
-                embed = discord.Embed(title=f'{user}\'s Profile',
-                                      description="This user has no linked accounts")
-            await ctx.respond(embed=embed)
-        except:  # this should make a new json object under data with the set to `user.id`
-            embed = discord.Embed(
-                description="user not logged, this will be fixed once I figure out how to append data to a json file, in the mean time only accounts <@166311283744964608> and <@616258229122498581> work with this command. - Nugget")
-            await ctx.respond(embed=embed)
+    with open('./data/users.json') as f:
+        raw_data = json.load(f)
+    try:
+        user_data = raw_data['data'][f'{user.id}']
+        if user_data['mc-uuid'] != None:
+            uuid = user_data['mc-uuid']
+            player = MCUUID(uuid=f'{uuid}')
+            embed = discord.Embed(title=f'{user}\'s Profile',
+                                  description=f'Minecraft Username {player.name}')
+        else:
+            embed = discord.Embed(title=f'{user}\'s Profile',
+                                  description="This user has no linked accounts")
+        await ctx.respond(embed=embed)
+    except:  # this should make a new json object under data with the set to `user.id`
+        data['data'] = f'{user.id}'
+        with open('./data/users.json', 'w') as f:
+            json.dump(data, f, indent=2)
+        embed = discord.Embed(
+            title=f'{user}\'s Profile',
+            description="This user has no linked accounts")
+        await ctx.respond(embed=embed)
 
 with open("config.toml", "r") as f:
     data = toml.load(f)
@@ -106,5 +111,5 @@ TOKEN = data['Discord']['TOKEN']
 try:
     bot.run(TOKEN)
 except:
-    print('Error: Invalid or no Discord token')
+    print('Error: Invalid or no Discord token, check `config.toml`')
     exit()
