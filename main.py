@@ -4,9 +4,11 @@ import json
 from mcuuid import MCUUID
 from mcuuid.tools import is_valid_mojang_uuid, is_valid_minecraft_username
 import toml
+import ftplib
 
 bot = discord.Bot()
 info = bot.create_group("info")
+link = bot.create_group("link")
 
 # Config template
 config = {
@@ -17,7 +19,12 @@ config = {
         'TOKEN': ''
     },
     'Minecraft': {
-        'authtype': ''
+        'authtype': 'ftp'
+    },
+    'FTP': {
+        'host': '',
+        'user': '',
+        'pass': ''
     }
 }
 
@@ -40,19 +47,36 @@ async def on_ready():
     print(f"{bot.user} is ready and online!")
 
 
-@info.command(name="addminecraft", description="Add info to an user")
-async def addmc(ctx, user: discord.Member, uuid: str):
-    trimmed_uuid = uuid.replace("-", "")
-    if is_valid_mojang_uuid(trimmed_uuid):
+@link.command(name='mincraft', description='Link your minecraft account to discord')
+async def mincraft(ctx, code: int):
+    code = str(code)
+    with open("config.toml", "r") as f:
+        data = toml.load(f)
+    host = data['FTP']['host']
+    user = data['FTP']['user']
+    password = data['FTP']['pass']
+    file_name = 'auth.json'
+
+    ftp = ftplib.FTP(host, user, password)
+    ftp.encoding = "utf-8"
+
+    with open('./data/auth.json', "wb") as f:
+        ftp.retrbinary(f"RETR ./auth/{file_name}", f.write)
+    with open('./data/auth.json', 'r') as f:
+        raw_data = json.load(f)
+    codes = raw_data['codes']
+    if code in codes:
+        uuid = codes[f'{code}']['uuid']
+        trimmed_uuid = uuid.replace("-", "")
         with open('./data/users.json', 'r') as f:
             data = json.load(f)
-        data['data'][f'{user.id}']['mc-uuid'] = f'{trimmed_uuid}'
+        data['data'][f'{ctx.author.id}']['mc-uuid'] = f'{trimmed_uuid}'
         with open("./data/users.json", 'w') as f:
             json.dump(data, f, indent=2)
         player = MCUUID(uuid=trimmed_uuid)
-        await ctx.respond(f"Minecraft account \"{player.name}\" linked to user <@{user.id}>!")
+        await ctx.respond(f"Minecraft account \"{player.name}\" linked to user <@{ctx.author.id}>!")
     else:
-        await ctx.respond("Invalid minecraft UUID.")
+        await ctx.respond("Invalid code.")
 
 
 @info.command(name="lookup",
