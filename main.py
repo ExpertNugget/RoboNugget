@@ -79,4 +79,8 @@ async def lookup(ctx, user: discord.Member):
 with open("config.toml", "r") as f:
     data = toml.load(f)
 TOKEN = data['Discord']['TOKEN']
-bot.run(TOKEN)
+try:
+    bot.run(TOKEN)
+except:
+    print('Error: Invalid or no Discord token')
+    exit()
