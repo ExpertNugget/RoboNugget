@@ -8,13 +8,16 @@ import toml
 bot = discord.Bot()
 info = bot.create_group("info")
 
-
+# Config template
 config = {
     'Config': {
-        'VERSION': '1'
+        'VERSION': '2'
     },
     'Discord': {
         'TOKEN': ''
+    },
+    'Minecraft': {
+        'authtype': ''
     }
 }
 
