@@ -6,6 +6,7 @@ from mcuuid.tools import is_valid_mojang_uuid, is_valid_minecraft_username
 import toml
 import ftplib
 
+
 bot = discord.Bot()
 info = bot.create_group("info")
 link = bot.create_group("link")
@@ -27,7 +28,6 @@ config = {
         'pass': ''
     }
 }
-
 if not os.path.isfile('config.toml'):
     with open('config.toml', 'w') as f:
         toml.dump(config, f)
@@ -38,7 +38,8 @@ elif os.path.isfile('config.toml'):
         data = toml.load(f)
     version = data['Config']['VERSION']
     if version != '3':
-        print('Error: Config version is outdated, rename your `config.toml` file or move to another folder and resart the bot')
+        print(
+            'Error: Config version is outdated, rename your `config.toml` file or move to another folder and resart the bot')
         exit()
 
 
@@ -48,20 +49,20 @@ async def on_ready():
 
 
 @link.command(name='minecraft', description='Link your minecraft account to discord')
-async def mincraft(ctx, code: discord.Option(int)):
+async def minecraft(ctx, code: discord.Option(int)):
+    await ctx.defer()
     code = str(code)
     with open("config.toml", "r") as f:
         data = toml.load(f)
     host = data['FTP']['host']
     user = data['FTP']['user']
     password = data['FTP']['pass']
-    file_name = 'auth.json'
 
     ftp = ftplib.FTP(host, user, password)
     ftp.encoding = "utf-8"
 
     with open('./data/auth.json', "wb") as f:
-        ftp.retrbinary(f"RETR ./auth/{file_name}", f.write)
+        ftp.retrbinary("RETR ./auth/auth.json", f.write)
     with open('./data/auth.json', 'r') as f:
         raw_data = json.load(f)
     codes = raw_data['codes']
@@ -69,13 +70,16 @@ async def mincraft(ctx, code: discord.Option(int)):
         uuid = codes[f'{code}']['uuid']
         trimmed_uuid = uuid.replace("-", "")
         with open('./data/users.json', 'r') as f:
-            data = json.load(f)
-        data = raw_data['data'][f'{user.id}']
-        data['data'][f'{ctx.author.id}']['mc-uuid'] = f'{trimmed_uuid}'
+            raw_data = json.load(f)
+        data = raw_data[f'{ctx.author.id}']['mc_uuid']
+        if raw_data[f'{ctx.author.id}']['mc_uuid'] == None:
+            raw_data[f'{ctx.author.id}']['mc_uuid'] = trimmed_uuid
+        else:
+            print('')
         with open("./data/users.json", 'w') as f:
             json.dump(data, f, indent=2)
         player = MCUUID(uuid=trimmed_uuid)
-        await ctx.respond(f"Minecraft account \"{player.name}\" linked to user {ctx.author}!")
+        await ctx.respond(f"Minecraft account \"{player.name}\" linked to user {ctx.author.display_name}!")
     else:
         await ctx.respond("Invalid code.")
 
@@ -83,28 +87,42 @@ async def mincraft(ctx, code: discord.Option(int)):
 @info.command(
     name="lookup",
     description="[WIP] Shows all logged data on a given user")
-async def lookup(ctx, user: discord.Option(discord.Member)):
-    with open('./data/users.json') as f:
+async def lookup(ctx, user: discord.Option(discord.Member) = None):
+    await ctx.defer()
+    with open('./data/users.json', 'r') as f:
         raw_data = json.load(f)
     try:
-        data = raw_data['data'][f'{user.id}']
+        if user == None:
+            user = ctx.author
+        else:
+            data = raw_data[user.id]
         if data['mc-uuid'] != None:
             uuid = data['mc-uuid']
             player = MCUUID(uuid=f'{uuid}')
-            embed = discord.Embed(title=f'{user}\'s Profile',
+            embed = discord.Embed(title=f'{user.display_name}\'s Profile',
                                   description=f'Minecraft Username {player.name}')
         else:
-            embed = discord.Embed(title=f'{user}\'s Profile',
-                                  description="This user has no linked accounts")
+            embed = discord.Embed(title=f'{user.display_name}\'s Profile',
+                                  description="This user has no linked accounts.")
         await ctx.respond(embed=embed)
     except:  # this should make a new json object under data with the set to `user.id`
-        raw_data['data'] = f'{user.id}'
         with open('./data/users.json', 'w') as f:
-            json.dump(data, f, indent=2)
+            json.dump(raw_data, f, indent=2)
         embed = discord.Embed(
-            title=f'{user}\'s Profile',
-            description="This user has no linked accounts")
+            title=f'{user.display_name}\'s Profile',
+            description="This user has no linked accounts.",
+            thumbnail=user.display_avatar.url,
+            colour=user.colour)
         await ctx.respond(embed=embed)
+
+
+cogs_list = [
+    'update'
+]
+
+for cog in cogs_list:
+    bot.load_extension(f'cogs.{cog}')
+
 
 with open("config.toml", "r") as f:
     data = toml.load(f)

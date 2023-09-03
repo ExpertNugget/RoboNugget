@@ -3,3 +3,4 @@ config.toml
 data/users.json
 README.md
 data/auth.json
+cogs/__pycache__/
