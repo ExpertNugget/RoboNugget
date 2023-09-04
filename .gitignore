@@ -1,6 +1,5 @@
 config.toml
 .vscode/settings.json
-data/users.json
 README.md
-data/auth.json
 cogs/__pycache__/
+data/
