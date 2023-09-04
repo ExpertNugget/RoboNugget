@@ -13,7 +13,7 @@ class link(commands.Cog):
     link = discord.SlashCommandGroup("link")
 
     @link.command(name='minecraft', description='Link your minecraft account to discord')
-    async def minecraft(ctx, code: discord.Option(int)):
+    async def minecraft(self, ctx, code: discord.Option(int)):
         await ctx.defer()
         code = str(code)
         with open("config.toml", "r") as f:

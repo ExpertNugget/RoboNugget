@@ -15,7 +15,7 @@ class info(commands.Cog):  # create a class for our cog that inherits from comma
     @info.command(
         name="lookup",
         description="[WIP] Shows all logged data on a given user")
-    async def lookup(ctx, user: discord.Option(discord.Member) = None):
+    async def lookup(self, ctx, user: discord.Option(discord.Member) = None):
         await ctx.defer()
         with open('./data/users.json', 'r') as f:
             raw_data = json.load(f)
