@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
+import toml
+import ftplib
 import json
-from mcuuid import MCUUID
 
 
 class download(commands.Cog):  # create a class for our cog that inherits from commands.Cog
@@ -11,6 +12,26 @@ class download(commands.Cog):  # create a class for our cog that inherits from c
         self.bot = bot
 
     download = discord.SlashCommandGroup("download")
+
+    @download.command(name='backup', description='download latest backup from mps server')
+    async def backup(self, ctx):
+        await ctx.defer()
+        with open("config.toml", "r") as f:
+            data = toml.load(f)
+        host = data['FTP']['host']
+        user = data['FTP']['user']
+        password = data['FTP']['pass']
+
+        ftp = ftplib.FTP(host, user, password)
+        ftp.encoding = "utf-8"
+
+        with open('./data/backups.json', "wb") as f:
+            ftp.retrbinary("RETR ./backups/backups.json", f.write)
+        with open('./data/backups.json', 'r') as f:
+            raw_data = json.load(f)
+        data = raw_data['backups']
+        print(data)
+        await ctx.respond('potatoes')
 
 
 def setup(bot):
