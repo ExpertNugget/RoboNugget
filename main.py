@@ -7,7 +7,7 @@ bot = discord.Bot()
 # Config template
 config = {
     'Config': {
-        'VERSION': '3'
+        'VERSION': '4'
     },
     'Discord': {
         'TOKEN': ''
@@ -19,6 +19,11 @@ config = {
         'host': '',
         'user': '',
         'pass': ''
+    },
+    'MediaFire': {
+        'email': '',
+        'password': '',
+        'app_id': '42511'
     }
 }
 if not os.path.isfile('config.toml'):
@@ -30,7 +35,7 @@ elif os.path.isfile('config.toml'):
     with open('config.toml', 'r') as f:
         data = toml.load(f)
     version = data['Config']['VERSION']
-    if version != '3':
+    if version != '4':
         print(
             'Error: Config version is outdated, rename your `config.toml` file or move to another folder and resart the bot')
         exit()
