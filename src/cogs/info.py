@@ -30,14 +30,10 @@ class info(commands.Cog):  # create a class for our cog that inherits from comma
             with open('./data/users.json', 'w') as f:
                 json.dump(raw_data, f, indent=2)
         try:
-            print('Is running')
             is_alt = raw_data[f'{user.id}']['is_alt']
-            print(is_alt)
         except:
             is_alt = False
-        print('before')
         if is_alt == True:
-            print('im running')
             alt = user.id
             user_id = raw_data[f'{user.id}']['main_id']
             user = self.get_user(user_id)
