@@ -12,7 +12,7 @@ class link(commands.Cog):
         self.bot = bot
     link = discord.SlashCommandGroup("link")
 
-    @link.command(name='minecraft', description='Link your minecraft account to discord')
+    @link.command(name='minecraft', description='Link your Minecraft account to Discord')
     async def minecraft(self, ctx, code: discord.Option(int)):
         await ctx.defer()
         code = str(code)
@@ -46,6 +46,12 @@ class link(commands.Cog):
             await ctx.respond(f"Minecraft account \"{player.name}\" linked to user {ctx.author.display_name}!")
         else:
             await ctx.respond("Invalid code.")
+
+    @link.command(name='twitch', description='Link your Twitch account to Discord')
+    async def twitch(self, ctx, code: discord.Option(int)):
+        await ctx.defer()
+        code = str(code)
+        await ctx.respond('Not made yet :p - Nugget')
 
 
 def setup(bot):

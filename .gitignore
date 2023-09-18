@@ -1,5 +1,8 @@
+.vscode/
+bin/
+lib/
+lib64
 config.toml
-.vscode/settings.json
-README.md
-cogs/__pycache__/
 data/
+__pycache__
+pyvenv.cfg
