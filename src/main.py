@@ -2,7 +2,9 @@ import os
 import discord
 import toml
 
+
 bot = discord.Bot()
+
 
 # Config template
 config = {

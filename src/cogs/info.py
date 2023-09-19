@@ -77,7 +77,8 @@ class info(commands.Cog):  # create a class for our cog that inherits from comma
             pass
         if twitch_user != None:
             embed.add_field(name='Twitch Username:',
-                            value=f'{twitch_user}')
+                            value=f'[{twitch_user}](https://twitch.tv/{twitch_user})')
+        # Send a message when the button is clicked
         await ctx.respond(embed=embed)
 
 
