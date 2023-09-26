@@ -1,9 +1,8 @@
 import discord
 from discord.ext import commands
-import json
-from mcuuid import MCUUID
+import sqlite3
 
-
+database = "src/data/mpsdb.sqlite3"
 class info(commands.Cog):  # create a class for our cog that inherits from commands.Cog
     # this class is used to create a cog, which is a module that can be added to the bot
 
@@ -17,18 +16,37 @@ class info(commands.Cog):  # create a class for our cog that inherits from comma
         description="[WIP] Shows all logged data on a given user")
     async def lookup(self, ctx, user: discord.Option(discord.Member) = None):
         await ctx.defer()
-        with open('./data/users.json', 'r') as f:
-            raw_data = json.load(f)
         if user != None:
             pass
         else:
             user = ctx.author
-        if raw_data[f'{user.id}'] != None:
-            pass
+
+        with sqlite3.connect(database) as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM users WHERE discord_id = ?", (user.id,))
+            rows = cur.fetchall()
+
+        # Get the column names
+        column_names = [description[0] for description in cur.description]
+
+        for row in rows:
+            # Create a dictionary where the keys are column names and the values are row values
+            raw_data = dict(zip(column_names, row))
+
+        # Now you can access each value using its column name
+        #ex: discord_id = raw_data['discord_id']    
+        
+        
+        try:
+            discord_id = raw_data['discord_id']
+        except:
+            with sqlite3.connect(database) as conn:
+                cur = conn.cursor()
+                cur.execute("INSERT INTO users (discord_id) VALUES (?)", (user.id,))
+
         else:
-            raw_data[f'{user.id}'] = {}
-            with open('./data/users.json', 'w') as f:
-                json.dump(raw_data, f, indent=2)
+            pass
+        """
         try:
             is_alt = raw_data[f'{user.id}']['is_alt']
         except:
@@ -57,15 +75,14 @@ class info(commands.Cog):  # create a class for our cog that inherits from comma
             description = None
         try:
             colour = raw_data[f'{user.id}']['colour']
-        except:
+        except:           
             colour = None
-
+        """
         embed = discord.Embed(
             title=f'{user.display_name}\'s Profile',
-            description=description,
-            thumbnail=user.display_avatar.url,
-            colour=colour)
-
+            thumbnail=user.display_avatar.url
+            )
+        """
         if mcuuid != None:
             player = MCUUID(uuid=f'{mcuuid}')
             embed.add_field(name='Minecraft Username:', value=f'{player.name}')
@@ -79,6 +96,7 @@ class info(commands.Cog):  # create a class for our cog that inherits from comma
             embed.add_field(name='Twitch Username:',
                             value=f'[{twitch_user}](https://twitch.tv/{twitch_user})')
         # Send a message when the button is clicked
+        """
         await ctx.respond(embed=embed)
 
 
