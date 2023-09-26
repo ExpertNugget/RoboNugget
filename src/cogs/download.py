@@ -18,7 +18,7 @@ class download(commands.Cog):  # create a class for our cog that inherits from c
     @download.command(name='backup', description='download latest backup from mps server')
     async def backup(self, ctx):
         await ctx.defer()
-        with open("config.toml", "r") as f:
+        with open("data/config.toml", "r") as f:
             data = toml.load(f)
         host = data['FTP']['host']
         user = data['FTP']['user']
@@ -45,7 +45,7 @@ class download(commands.Cog):  # create a class for our cog that inherits from c
                 file = './backups/' + filename + '.zip'
                 with open('./data/backup.zip', "wb") as f:
                     ftp.retrbinary(f"RETR {file}", f.write)
-                with open("config.toml", "r") as f:
+                with open("data/config.toml", "r") as f:
                     data = toml.load(f)
                 api = MediaFireApi()
                 session = api.user_get_session_token(

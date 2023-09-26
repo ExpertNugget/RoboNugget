@@ -28,13 +28,13 @@ config = {
         'app_id': '42511'
     }
 }
-if not os.path.isfile('config.toml'):
-    with open('config.toml', 'w') as f:
+if not os.path.isfile('src/data/config.toml'):
+    with open('src/data/config.toml', 'w') as f:
         toml.dump(config, f)
     print('Config file created, add discord bot token and start the bot.')
     exit()
-elif os.path.isfile('config.toml'):
-    with open('config.toml', 'r') as f:
+elif os.path.isfile('src/data/config.toml'):
+    with open('src/data/config.toml', 'r') as f:
         data = toml.load(f)
     version = data['Config']['VERSION']
     if version != '4':
@@ -58,7 +58,7 @@ for cog in cogs_list:
     bot.load_extension(f'cogs.{cog}')
 
 
-with open("config.toml", "r") as f:
+with open("src/data/config.toml", "r") as f:
     data = toml.load(f)
 TOKEN = data['Discord']['TOKEN']
 try:
