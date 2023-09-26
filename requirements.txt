@@ -9,6 +9,8 @@ idna==3.4
 mcuuid==1.1.0
 mediafire==0.6.1
 multidict==6.0.4
+pip-autoremove==0.10.0
+psycopg2-binary==2.9.7
 py-cord @ git+https://github.com/Pycord-Development/pycord@046d38c914e902645265d42c38539be0f76a117c
 requests==2.31.0
 requests-toolbelt==1.0.0
