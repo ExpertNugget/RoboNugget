@@ -1,9 +1,7 @@
 import discord
 from discord.ext import commands
-import toml
 import ftplib
 from mcuuid import MCUUID
-import json
 
 
 class link(commands.Cog):

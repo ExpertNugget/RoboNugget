@@ -1,8 +1,6 @@
 import discord
 from discord.ext import commands
-import toml
 import ftplib
-import json
 from datetime import datetime, timezone
 
 

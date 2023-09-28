@@ -14,9 +14,9 @@ class bump(commands.Cog):
         if not message.author.bot:
             return
         channel = message.channel
-        print('checking message author')
-        if message.author == 302050872383242240:
+        if message.author.id == 302050872383242240:
             print('author confirm to be disboard\nchecking embed')
+            print(message.embeds)
             for embed in message.embeds:
                 print(embed)
                 if "Bump done!" in embed.description:
