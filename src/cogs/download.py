@@ -4,7 +4,6 @@ import toml
 import ftplib
 import json
 from datetime import datetime, timezone
-from mediafire import (MediaFireApi, MediaFireUploader)
 
 
 class download(commands.Cog):  # create a class for our cog that inherits from commands.Cog
