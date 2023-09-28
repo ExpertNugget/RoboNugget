@@ -55,13 +55,6 @@ for cog in cog_list:
         continue
     bot.load_extension(f'cogs.{cog}')
 
-#add
-#with sqlite3.connect(database) as conn:
-#    cur = conn.cursor()
-#    cur.execute("INSERT INTO users (discord_id) VALUES (?)", (user.id,))
-#
-##get
-#get
 
 # keeps asking for a token until a valid token is provided
 while True:
