@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import sqlite3
 
-database = "src/data/mpsdb.sqlite3"
+database = "./data/mpsdb.sqlite3"
 class info(commands.Cog):  # create a class for our cog that inherits from commands.Cog
     # this class is used to create a cog, which is a module that can be added to the bot
 
