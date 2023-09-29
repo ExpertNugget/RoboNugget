@@ -36,7 +36,7 @@ with sqlite3.connect(database) as conn:
         token TEXT PRIMARY KEY)
     """)
 
-bot = discord.Bot()
+bot = discord.Bot(intents=discord.Intents.all())
 
 @bot.event
 async def on_ready():
