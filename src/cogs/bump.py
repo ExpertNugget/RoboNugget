@@ -15,22 +15,17 @@ class bump(commands.Cog):
             return
         channel = message.channel
         if message.author.id == 302050872383242240:
-            print('author confirm to be disboard\nchecking embed')
-            print(message.embeds)
             for embed in message.embeds:
                 print(embed)
                 if "Bump done!" in embed.description:
-                    print('embed matched')
                     embed = discord.Embed(
                         title="Thank you for bumping the server!",
-                        description="I'll ping <@836263721281650718> when the server can be bumped again."
+                        description="I'll ping <@&836263721281650718> when the server can be bumped again."
                     )
-                    
                     await channel.send(embed=embed)
                     # waits 2 hours and sends a followup
-                    print('waiting 2 hours for next response')
                     await asyncio.sleep(7200)
-                    content = '<@836263721281650718>'
+                    content = '<@&36263721281650718>'
                     embed = discord.Embed(
                         title='It\'s time to bump!',
                         description='Bump the server by running </bump:947088344167366698>'
