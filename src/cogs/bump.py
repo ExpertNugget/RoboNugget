@@ -16,7 +16,6 @@ class bump(commands.Cog):
         channel = message.channel
         if message.author.id == 302050872383242240:
             for embed in message.embeds:
-                print(embed)
                 if "Bump done!" in embed.description:
                     embed = discord.Embed(
                         title="Thank you for bumping the server!",
