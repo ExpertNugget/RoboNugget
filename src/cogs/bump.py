@@ -35,18 +35,5 @@ class bump(commands.Cog):
         else:   
             return
 
-class MyCog(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        # Ignore messages from non-bots
-        if not message.author.bot:
-            return
-
-        # Do something with the bot message
-        print(message.content)
-
 def setup(bot): 
     bot.add_cog(bump(bot))
