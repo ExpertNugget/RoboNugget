@@ -103,6 +103,8 @@ class bump(commands.Cog):
                         remind_title = raw_data['remind_title']
                         ping_role = raw_data['ping_role']
                         role_id = raw_data['role_id']
+                        embed = ''
+                        content = ''
                     if is_embed == 1:
                         if thank_title:
                             
@@ -119,7 +121,7 @@ class bump(commands.Cog):
                             content = thank_title + thank_description
                         else:
                             content = thank_description
-                    await channel.send(content=content, embed=embed) if embed and content else await channel.send(embed=embed) if embed  else await channel.send(content=content) if content else None      # waits 2 hours and sends a followup
+                    await channel.send(content=content, embed=embed) # waits 2 hours and sends a followup
                     await asyncio.sleep(7200)
 
                     if is_embed == 0 and ping_role == 0:
