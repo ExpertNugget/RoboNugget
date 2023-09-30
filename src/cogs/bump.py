@@ -96,13 +96,13 @@ class bump(commands.Cog):
                         column_names = [description[0] for description in cur.description]
                         for row in rows:
                             raw_data = dict(zip(column_names, row))
-                        is_embed = raw_data[is_embed]
-                        thank_title = raw_data[thank_title]
-                        thank_description = raw_data[thank_description]
-                        remind_description = raw_data[remind_description]
-                        remind_title = raw_data[remind_title]
-                        ping_role = raw_data[ping_role]
-                        role_id = raw_data[role_id]
+                        is_embed = raw_data['is_embed']
+                        thank_title = raw_data['thank_title']
+                        thank_description = raw_data['thank_description']
+                        remind_description = raw_data['remind_description']
+                        remind_title = raw_data['remind_title']
+                        ping_role = raw_data['ping_role']
+                        role_id = raw_data['role_id']
                     if is_embed == 1:
                         if thank_title:
                             embed = discord.Embed(
