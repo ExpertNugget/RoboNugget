@@ -11,6 +11,34 @@ class bump(commands.Cog):
     def __init__(self, bot): 
         self.bot = bot
 
+    bump = discord.SlashCommandGroup("bump-config")
+
+    @bump.command(name="remind-title")
+    async def remind_title(self, ctx):
+        await ctx.respond('This command I\'snt made yet -Nugget')
+    
+    @bump.command(name="remind-description")
+    async def remind_description(self, ctx):
+        await ctx.respond('This command I\'snt made yet -Nugget')
+
+    @bump.command(name="thank-title")
+    async def thank_title(self, ctx):
+        await ctx.respond('This command I\'snt made yet -Nugget')
+    
+    @bump.command(name="thank-description")
+    async def thank_description(self, ctx):
+        await ctx.respond('This command I\'snt made yet -Nugget')
+    
+    @bump.command(name="embed")
+    async def embed(self, ctx):
+        await ctx.respond('Command not made yet, but it will let you choose whether the bump messages are an embed or not. -Nugget')
+    
+    @bump.command(name="role")
+    async def role(self, ctx):
+        await ctx.respond('Command not made yet, but it will let you set or remove a role to be pinged. -Nugget')
+
+
+
     @commands.Cog.listener()
     async def on_message(self, message):
         #ignores non bots
