@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import discord
 from discord.ext import commands
 import asyncio
@@ -13,31 +12,72 @@ class bump(commands.Cog):
 
     bump = discord.SlashCommandGroup("bump-config")
 
-    @bump.command(name="remind-title")
-    async def remind_title(self, ctx):
-        await ctx.respond('This command I\'snt made yet -Nugget')
-    
-    @bump.command(name="remind-description")
-    async def remind_description(self, ctx):
-        await ctx.respond('This command I\'snt made yet -Nugget')
-
-    @bump.command(name="thank-title")
-    async def thank_title(self, ctx):
-        await ctx.respond('This command I\'snt made yet -Nugget')
-    
-    @bump.command(name="thank-description")
-    async def thank_description(self, ctx):
-        await ctx.respond('This command I\'snt made yet -Nugget')
-    
-    @bump.command(name="embed")
-    async def embed(self, ctx):
-        await ctx.respond('Command not made yet, but it will let you choose whether the bump messages are an embed or not. -Nugget')
-    
-    @bump.command(name="role")
-    async def role(self, ctx):
-        await ctx.respond('Command not made yet, but it will let you set or remove a role to be pinged. -Nugget')
-
-
+    ###  Disabled, i'll get it working tmr -Nugget
+    #@bump.command(name="remind-title")
+    #async def remind_title(self, ctx, title: discord.Option(str)):
+    #    await ctx.defer()
+    #    with sqlite3.connect(database) as conn:
+    #        cur = conn.cursor()
+    #        cur.execute("SELECT * from configs WHERE guild_id = ?", (ctx.guild.id,))
+    #        rows = cur.fetchall()
+    #        column_names = [description[0] for description in cur.description]
+    #        for row in rows:
+    #            raw_data = dict(zip(column_names, row))
+    #        staff_id = raw_data[staff_role_id]
+    #    for role in ctx.author.roles:
+    #        print(role)
+    #        if role.id == staff_id:
+    #            with sqlite3.connect(database) as conn:
+    #                cur = conn.cursor()
+    #                cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, remind_title) VALUES (?, ?)", (ctx.guild.id, title,)) 
+    #            await ctx.respond(f'Set remind title to "{title}"')
+    #        else:
+    #            pass
+    #@bump.command(name="remind-description")
+    #async def remind_description(self, ctx, description: discord.Option(str)):
+    #    await ctx.defer()
+    #    with sqlite3.connect(database) as conn:
+    #        cur = conn.cursor()
+    #        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, remind_description) VALUES (?, ?)", (ctx.guild.id, description,)) 
+    #    await ctx.respond(f'Set remind description to "{description}"')
+    #
+    #@bump.command(name="thank-title")
+    #async def thank_title(self, ctx, title: discord.Option(str)):
+    #    await ctx.defer()
+    #    with sqlite3.connect(database) as conn:
+    #        cur = conn.cursor()
+    #        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, thank_title) VALUES (?, ?)", (ctx.guild.id, title,)) 
+    #    await ctx.respond(f'Set thank title to "{title}"')
+    #
+    #@bump.command(name="thank-description")
+    #async def thank_description(self, ctx, description: discord.Option(str)):
+    #    await ctx.defer()
+    #    with sqlite3.connect(database) as conn:
+    #        cur = conn.cursor()
+    #        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, thank_description) VALUES (?, ?)", (ctx.guild.id, description,)) 
+    #    await ctx.respond(f'Set remind description to "{description}"')
+    #
+    #@bump.command(name="embed")
+    #async def embed(self, ctx, embeds: discord.Option(str, choices=["enabled", "disabled"])):
+    #    await ctx.defer()
+    #    if embeds == "enabled":
+    #        is_embed=1
+    #    else:
+    #        is_embed=0
+    #    with sqlite3.connect(database) as conn:
+    #        cur = conn.cursor()
+    #        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, is_embed) VALUES (?, ?)", (ctx.guild.id, is_embed,)) 
+    #    await ctx.respond(f'Embeds are now {embeds}')
+    #
+    #
+    #@bump.command(name="role")
+    #async def role(self, ctx, description: discord.Option(str)):
+    #    await ctx.defer()
+    #    with sqlite3.connect(database) as conn:
+    #        cur = conn.cursor()
+    #        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, remind_description) VALUES (?, ?)", (ctx.guild.id, description,)) 
+    #    await ctx.respond(f'Set remind description to "{description}"')
+    ###  Disabled, i'll get it working tmr -Nugget
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -50,8 +90,8 @@ class bump(commands.Cog):
                 if "Bump done!" in embed.description:
                     with sqlite3.connect(database) as conn:
                         cur = conn.cursor()
-                        cur.execute("INSERT OR REPLACE INTO bumpconfig (guild_id) VALUES (?)", (message.guild.id,))
-                        cur.execute("SELECT * from bumpconfig WHERE guild_id = ?", (message.guild.id,))
+                        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id) VALUES (?)", (message.guild.id,))
+                        cur.execute("SELECT * from bumpconfigs WHERE guild_id = ?", (message.guild.id,))
                         rows = cur.fetchall()
                         column_names = [description[0] for description in cur.description]
                         for row in rows:
