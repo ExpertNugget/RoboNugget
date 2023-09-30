@@ -105,6 +105,7 @@ class bump(commands.Cog):
                         role_id = raw_data['role_id']
                     if is_embed == 1:
                         if thank_title:
+                            
                             embed = discord.Embed(
                             title=thank_title,
                             description=thank_description
@@ -118,10 +119,12 @@ class bump(commands.Cog):
                             content = thank_title + thank_description
                         else:
                             content = thank_description
-                    
-                    
-                    await channel.send(content=content, embed=embed)
-                    # waits 2 hours and sends a followup
+                    if embed and content:
+                        await channel.send(content=content, embed=embed)
+                    elif embed: 
+                        await channel.send(embed=embed)
+                    elif content: 
+                        await channel.send(content=content)          # waits 2 hours and sends a followup
                     await asyncio.sleep(7200)
 
                     if is_embed == 0 and ping_role == 0:
@@ -156,7 +159,12 @@ class bump(commands.Cog):
                             embed = discord.Embed(
                                 description=remind_description
                             )
-                    await channel.send(content=content, embed=embed)
+                    if embed and content:
+                        await channel.send(content=content, embed=embed)
+                    elif embed: 
+                        await channel.send(embed=embed)
+                    elif content: 
+                        await channel.send(content=content)
 
 def setup(bot): 
     bot.add_cog(bump(bot))
