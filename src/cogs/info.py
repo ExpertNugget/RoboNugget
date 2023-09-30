@@ -42,7 +42,7 @@ class info(commands.Cog):  # create a class for our cog that inherits from comma
         except:
             with sqlite3.connect(database) as conn:
                 cur = conn.cursor()
-                cur.execute("INSERT INTO users (discord_id) VALUES (?)", (user.id,))
+                cur.execute("INSERT OR REPLACE INTO users (discord_id) VALUES (?)", (user.id,))
 
         else:
             pass
