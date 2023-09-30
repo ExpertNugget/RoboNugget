@@ -24,16 +24,22 @@ with sqlite3.connect(database) as conn:
 with sqlite3.connect(database) as conn:
     cur = conn.cursor()
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS configs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        guild_id INTEGER NOT NULL
-    )
+    CREATE TABLE IF NOT EXISTS token (
+        token TEXT PRIMARY KEY)
     """)
 with sqlite3.connect(database) as conn:
     cur = conn.cursor()
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS token (
-        token TEXT PRIMARY KEY)
+    CREATE TABLE IF NOT EXISTS bumpconfig (
+        guild_id INTEGER PRIMARY KEY NOT NULL,
+        is_embed INTEGER DEFAULT "1" CHECK (is_embed IN (0,1)) NOT NULL,
+        role_id INTEGER,
+        ping_role INTEGER DEFAULT "0" CHECK (ping_role IN (0,1)) NOT NULL,
+        thank_title TEXT DEFAULT "Thanks for bumping the server!",
+        thank_description TEXT DEFAULT "I'll ping you when the next bump is ready." NOT NULL,
+        remind_title TEXT DEFAULT "It's time to bump!",
+        remind_description TEXT DEFAULT "Bump the server by running </bump:947088344167366698>" NOT NULL
+    )
     """)
 
 bot = discord.Bot(intents=discord.Intents.all())
