@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 import sqlite3
+import time
 
 database = "./data/mpsdb.sqlite3"
 
@@ -121,6 +122,11 @@ class bump(commands.Cog):
                             content = thank_title + thank_description
                         else:
                             content = thank_description
+                    if '{next-bump-count}' in content:
+                        current_epoch_time = time.time()
+                        epoch_time_plus_two_hours = current_epoch_time + 2 * 3600
+                        
+                        content.replace('{next-bump-count}', f"<T:{str(epoch_time_plus_two_hours)}:R")
                     await channel.send(content=content, embed=embed) # waits 2 hours and sends a followup
                     await asyncio.sleep(7200)
 
