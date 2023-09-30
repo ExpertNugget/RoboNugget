@@ -30,7 +30,7 @@ with sqlite3.connect(database) as conn:
 with sqlite3.connect(database) as conn:
     cur = conn.cursor()
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS bumpconfig (
+    CREATE TABLE IF NOT EXISTS bumpconfigs (
         guild_id INTEGER PRIMARY KEY NOT NULL,
         is_embed INTEGER DEFAULT "1" CHECK (is_embed IN (0,1)) NOT NULL,
         role_id INTEGER,
@@ -41,6 +41,15 @@ with sqlite3.connect(database) as conn:
         remind_description TEXT DEFAULT "Bump the server by running </bump:947088344167366698>" NOT NULL
     )
     """)
+with sqlite3.connect(database) as conn:
+    cur = conn.cursor()
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS configs (
+        guild_id INTEGER PRIMARY KEY NOT NULL,
+        staff_role_id INTEGER
+    )
+    """)
+
 
 bot = discord.Bot(intents=discord.Intents.all())
 
@@ -52,8 +61,8 @@ async def on_ready():
 # grabs all files ending in .py in src/cogs, and stores them in a list minus the .py to load all cogs.
 cog_list = [f[:-3] for f in os.listdir('./cogs') if f.endswith('.py')]
 
-# Cogs disabled due to no longer or not working code
-exclude_list = ['download', 'link', 'servers'] 
+# These cogs are hard disabled due to pending work, to make them function
+exclude_list = ['download', 'link', 'servers', 'admin'] 
 
 for cog in cog_list:
     # Skips cog if it's in the exclude list
