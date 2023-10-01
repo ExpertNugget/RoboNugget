@@ -162,7 +162,7 @@ class bump(commands.Cog):
                             embed = discord.Embed(
                                 description=remind_description
                             )
-                    await channel.send(content=content, embed=embed) if embed and content else await channel.send(embed=embed) if embed  else await channel.send(content=content) if content else None
+                    await channel.send(content=content, embed=embed)
 
 def setup(bot): 
     bot.add_cog(bump(bot))
