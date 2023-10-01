@@ -36,7 +36,7 @@ with sqlite3.connect(database) as conn:
         role_id INTEGER,
         ping_role INTEGER DEFAULT "0" CHECK (ping_role IN (0,1)) NOT NULL,
         thank_title TEXT DEFAULT "Thanks for bumping the server!",
-        thank_description TEXT DEFAULT "I'll ping you when the next bump is ready." NOT NULL,
+        thank_description TEXT DEFAULT "I'll ping you when the next bump is ready. Next bump {next-bump-count}" NOT NULL,
         remind_title TEXT DEFAULT "It's time to bump!",
         remind_description TEXT DEFAULT "Bump the server by running </bump:947088344167366698>" NOT NULL
     )
