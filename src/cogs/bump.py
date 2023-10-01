@@ -107,6 +107,9 @@ class bump(commands.Cog):
                         embed = ''
                         content = ''
                     
+                    if '{role}' in thank_description:
+                        thank_description.replace('{role}', f"<@&{role_id}>")
+                    
                     if '{next-bump-count}' in thank_description:
                         current_epoch_time = time.time()
                         epoch_time_plus_two_hours = current_epoch_time + 2 * 3600
