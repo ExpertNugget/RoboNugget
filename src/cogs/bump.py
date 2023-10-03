@@ -98,7 +98,7 @@ class bump(commands.Cog):
                             raw_data = dict(zip(column_names, row))
                         is_embed = raw_data['is_embed']
                         thank_title = raw_data['thank_title']
-                        thank_description = raw_data['thank_description']
+                        thank_description = str(raw_data['thank_description'])
                         remind_description = raw_data['remind_description']
                         remind_title = raw_data['remind_title']
                         ping_role = raw_data['ping_role']
