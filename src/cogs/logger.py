@@ -80,7 +80,6 @@ class logger(commands.Cog):  # create a class for our cog that inherits from com
         
         if log_thread_id: # log_thread_id found
             try: # check if thread still exists, else make new thread, otherwise update
-                print('in try')
                 thread = self.bot.get_channel(log_thread_id)
                 async with aiohttp.ClientSession() as session:
                     webhook = Webhook.from_url(log_channel_webhook, session=session)
@@ -88,12 +87,10 @@ class logger(commands.Cog):  # create a class for our cog that inherits from com
             except: # should only be here if original thread was deleted
                 print('in exception')
                 channel = self.bot.get_channel(log_channel_id)
-                print(channel)
                 username = message.author.display_name
                 current_time = str(int(time.time()))[:10]
                 thread_message = f'Discord IDs:\n- `{message.author.id}` (logged by <@{self.bot.user.id}> <t:{current_time}:d>)'
                 thread = await channel.create_thread(name = username, content = thread_message)
-                print(thread)
                 with sqlite3.connect(database) as conn:
                     cur = conn.cursor()
                     cur.execute("INSERT OR REPLACE INTO users (log_thread_id, username, discord_id) VALUES (?, ?, ?)", (thread.id, message.author.display_name, message.author.id,))
@@ -101,7 +98,6 @@ class logger(commands.Cog):  # create a class for our cog that inherits from com
                     webhook = Webhook.from_url(log_channel_webhook, session=session)
                     await webhook.send(content = message.content, username=message.author.display_name, avatar_url=message.author.display_avatar, thread=thread, wait=True)
         else: #log_thread_id not found, create thread
-            print('in else')
             channel = self.bot.get_channel(log_channel_id)
             username = message.author.display_name
             current_time = str(int(time.time()))[:10]
