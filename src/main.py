@@ -16,8 +16,8 @@ with sqlite3.connect(database) as conn:
     # temp solution for data storage until main database is working
     cur.execute("""
     CREATE TABLE IF NOT EXISTS users (
-        guild_id INTEGER AUTOINCREMENT NOT NULL,
-        discord_id INTEGER NOT NULL,
+        guild_id INTEGER,
+        discord_id INTEGER,
         username TEXT,
         log_thread_id INTEGER
     );
@@ -33,7 +33,7 @@ with sqlite3.connect(database) as conn:
     cur = conn.cursor()
     cur.execute("""
     CREATE TABLE IF NOT EXISTS bumpconfigs (
-        guild_id INTEGER NOT NULL,
+        guild_id INTEGER,
         is_embed INTEGER DEFAULT "1" CHECK (is_embed IN (0,1)) NOT NULL,
         role_id INTEGER,
         ping_role INTEGER DEFAULT "0" CHECK (ping_role IN (0,1)) NOT NULL,
@@ -47,7 +47,7 @@ with sqlite3.connect(database) as conn:
     cur = conn.cursor()
     cur.execute("""
     CREATE TABLE IF NOT EXISTS configs (
-        guild_id INTEGER NOT NULL,
+        guild_id INTEGER,
         staff_role_id INTEGER,
         log_channel_id INTEGER,
         log_channel_webhook TEXT
@@ -58,7 +58,7 @@ with sqlite3.connect(database) as conn:
     cur = conn.cursor()
     cur.execute("""
     CREATE TABLE IF NOT EXISTS logged_messages (
-        guild_id INTEGER NOT NULL,
+        guild_id INTEGER,
         channel_id INTEGER,
         message_id INTEGER,
         message_content TEXT,
