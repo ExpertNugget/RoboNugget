@@ -111,7 +111,7 @@ class bump(commands.Cog):
                         thank_description.replace('{role}', f"<@&{role_id}>")
                     
                     if '{next-bump-count}' in thank_description:
-                        current_epoch_time = time.time()
+                        current_epoch_time = int(str(int(time.time()))[:10])
                         epoch_time_plus_two_hours = current_epoch_time + 2 * 3600
                         thank_description.replace('{next-bump-count}', f"<T:{str(epoch_time_plus_two_hours)}:R")
 
