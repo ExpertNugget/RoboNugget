@@ -91,7 +91,6 @@ class bump(commands.Cog):
                 if "Bump done!" in embed.description:
                     with sqlite3.connect(database) as conn:
                         cur = conn.cursor()
-                        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id) VALUES (?)", (message.guild.id,))
                         cur.execute("SELECT * from bumpconfigs WHERE guild_id = ?", (message.guild.id,))
                         rows = cur.fetchall()
                         column_names = [description[0] for description in cur.description]
