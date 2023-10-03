@@ -3,6 +3,8 @@ from discord.ext import commands
 import sqlite3
 import time
 import re
+from discord import Webhook
+import aiohttp
 
 database = "./data/mpsdb.sqlite3"
 
@@ -18,12 +20,9 @@ class logger(commands.Cog):  # create a class for our cog that inherits from com
     async def on_message_delete(self, message):
         if message.author.bot:
             return
-        # store the message content and author in variables
-        content = message.content
-        author = message.author
         with sqlite3.connect(database) as conn:
             cur = conn.cursor()
-            cur.execute("SELECT * from users WHERE discord_id = ?", (author.id,))
+            cur.execute("SELECT * from users WHERE discord_id = ?", (message.author.id,))
             rows = cur.fetchall()
             column_names = [description[0] for description in cur.description]
             for row in rows:
@@ -47,27 +46,27 @@ class logger(commands.Cog):  # create a class for our cog that inherits from com
         if log_thread_id: # log_thread_id found
             try: # check if thread still exists, else make new thread, otherwise update
                 thread = self.bot.get_channel(log_thread_id) 
-                await thread.send(content = content) # use the stored content variable
+                await thread.send(content = message.content)
             except: # should only be here if original thread was deleted
                 channel = self.bot.get_channel(log_channel_id)
-                username = author.display_name # use the stored author variable
+                username = message.author.display_name
                 current_time = str(int(time.time()))[:10]
-                thread_message = f'Discord IDs:\n- `{author.id}` (logged by <@{self.bot.user.id}> <t:{current_time}:d>)' # use the stored author variable
+                thread_message = f'Discord IDs:\n- `{message.author.id}` (logged by <@{self.bot.user.id}> <t:{current_time}:d>)'
                 thread = await channel.create_thread(name = username, content = thread_message)
                 with sqlite3.connect(database) as conn:
                     cur = conn.cursor()
-                    cur.execute("INSERT OR REPLACE INTO users (log_thread_id, username, discord_id) VALUES (?, ?, ?)", (thread.id, author.display_name, author.id,))
-                await thread.send(content = content) # use the stored content variable
+                    cur.execute("INSERT OR REPLACE INTO users (log_thread_id, username, discord_id) VALUES (?, ?, ?)", (thread.id, message.author.display_name, message.author.id,))
+                await thread.send(content = message.content)
         else: #log_thread_id not found, create thread
             channel = self.bot.get_channel(log_channel_id)
-            username = author.display_name # use the stored author variable
+            username = message.author.display_name
             current_time = str(int(time.time()))[:10]
-            thread_message = f'Discord IDs:\n- `{author.id}` (logged by <@{self.bot.user.id}> <t:{current_time}:d>)' # use the stored author variable
+            thread_message = f'Discord IDs:\n- `{message.author.id}` (logged by <@{self.bot.user.id}> <t:{current_time}:d>)'
             thread = await channel.create_thread(name = username, content = thread_message)
             with sqlite3.connect(database) as conn:
                 cur = conn.cursor()
-                cur.execute("INSERT OR REPLACE INTO users (log_thread_id, username, discord_id) VALUES (?, ?, ?)", (thread.id, author.display_name, author.id,))
-            await thread.send(content = content) # use the stored content variable
+                cur.execute("INSERT OR REPLACE INTO users (log_thread_id, username, discord_id) VALUES (?, ?, ?)", (thread.id, message.author.display_name, message.author.id,))
+            await thread.send(content = message.content)
 
 def setup(bot): 
     bot.add_cog(logger(bot))
