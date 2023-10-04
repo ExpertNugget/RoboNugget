@@ -84,9 +84,9 @@ cog_list = [f[:-3] for f in os.listdir('./cogs') if f.endswith('.py')]
 async def reload(ctx, cog: discord.Option(str, choices=cog_list)):
     try:
         bot.reload_extension(f'cogs.{cog}')
-        await ctx.respond('`{cog}.py` has been reloaded :)')
+        await ctx.respond(f'`{cog}.py` has been reloaded :)')
     except:
-        await ctx.respond('`{cog}.py` has failed to reload :(')
+        await ctx.respond(f'`{cog}.py` has failed to reload :(')
 
 # These cogs are hard disabled due to pending work, to make them function
 
