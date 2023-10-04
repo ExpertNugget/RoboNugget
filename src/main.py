@@ -1,6 +1,7 @@
 import os
 import discord
 import sqlite3
+from discord.ext import commands
 
 # minor corrections for running dir, mainly for vsc
 if "/src" in os.getcwd():
@@ -73,18 +74,29 @@ async def on_ready():
     print(f"{bot.user} is ready and online!")
 
 
+
 # grabs all files ending in .py in src/cogs, and stores them in a list minus the .py to load all cogs.
 cog_list = [f[:-3] for f in os.listdir('./cogs') if f.endswith('.py')]
 
-# These cogs are hard disabled due to pending work, to make them function
-exclude_list = ['download', 'link', 'servers', 'admin'] 
 
+@bot.slash_command(name='reload', description='[Owner Only] - Shutdown bot')
+@commands.is_owner()
+async def reload(ctx, cog: discord.Option(str, choices=cog_list)):
+    bot.reload_extension(f'cogs.{cog}')
+    await ctx.respond('`{cog}.py` has been reloaded :)')
+
+# These cogs are hard disabled due to pending work, to make them function
+
+exclude_list = ['download', 'link', 'servers', 'admin'] 
 for cog in cog_list:
     # Skips cog if it's in the exclude list
     if cog in exclude_list:
         continue
-    bot.load_extension(f'cogs.{cog}')
-
+    try:
+        bot.load_extension(f'cogs.{cog}')
+    except:
+        print(f'Failed to load {cog}')
+        pass
 
 # keeps asking for a token until a valid token is provided
 while True:
