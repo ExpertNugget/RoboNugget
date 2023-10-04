@@ -110,7 +110,7 @@ class bump(commands.Cog):
                     if '{next-bump-count}' in thank_description:
                         current_epoch_time = int(str(int(time.time()))[:10])
                         epoch_time_plus_two_hours = current_epoch_time + 2 * 3600
-                        thank_description = thank_description.replace('{next-bump-count}', f"<T:{str(epoch_time_plus_two_hours)}:R>")
+                        thank_description = thank_description.replace('{next-bump-count}', f"<t:{str(epoch_time_plus_two_hours)}:R>")
                     if is_embed == 1:
                             embed = discord.Embed(
                             title=thank_title,
