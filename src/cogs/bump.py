@@ -82,9 +82,6 @@ class bump(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        #ignores non bots
-        if not message.author.bot:
-            return
         channel = message.channel
         if message.author.id == 302050872383242240:
             for embed in message.embeds:
