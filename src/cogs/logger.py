@@ -50,6 +50,8 @@ class logger(commands.Cog):  # create a class for our cog that inherits from com
     async def on_message_delete(self, message):
         if message.author.bot:
             return
+        if not message.content:
+            return
         with sqlite3.connect(database) as conn:
             cur = conn.cursor()
             cur.execute('INSERT or IGNORE INTO logged_messages (guild_id, channel_id, message_id, message_content) VALUES (?, ?, ?, ?)', (message.guild.id, message.channel.id, message.id, message.content,))
@@ -73,8 +75,6 @@ class logger(commands.Cog):  # create a class for our cog that inherits from com
                 config_dict = dict(zip(column_names, row))
             log_channel_id = config_dict['log_channel_id']
             log_channel_webhook = config_dict['log_channel_webhook']
-        print(log_channel_id)
-        print(log_channel_webhook)
         if not log_channel_id:
             return
         
@@ -93,7 +93,7 @@ class logger(commands.Cog):  # create a class for our cog that inherits from com
                 thread = await channel.create_thread(name = username, content = thread_message)
                 with sqlite3.connect(database) as conn:
                     cur = conn.cursor()
-                    cur.execute("INSERT OR REPLACE INTO users (log_thread_id, username, discord_id) VALUES (?, ?, ?)", (thread.id, message.author.display_name, message.author.id,))
+                    cur.execute("INSERT OR REPLACE INTO users (guild_id, log_thread_id, username, discord_id) VALUES (?, ?, ?, ?)", (message.guild.id, thread.id, message.author.display_name, message.author.id,))
                 async with aiohttp.ClientSession() as session:
                     webhook = Webhook.from_url(log_channel_webhook, session=session)
                     await webhook.send(content = message.content, username=message.author.display_name, avatar_url=message.author.display_avatar, thread=thread, wait=True)
