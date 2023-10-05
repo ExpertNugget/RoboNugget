@@ -11,6 +11,8 @@ class bump(commands.Cog):
     def __init__(self, bot): 
         self.bot = bot
 
+
+
     bump = discord.SlashCommandGroup("bump-config")
 
     ###  Disabled, i'll get it working tmr -Nugget
@@ -79,7 +81,13 @@ class bump(commands.Cog):
     #        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, remind_description) VALUES (?, ?)", (ctx.guild.id, description,)) 
     #    await ctx.respond(f'Set remind description to "{description}"')
     ###  Disabled, i'll get it working tmr -Nugget
-
+    
+    ### todo
+    # on_start
+    # check last bump time, if under 2 hrs start timer with remaining time til 2 hrs from bump time
+    # otherwise just send the reminder 
+    ### todo
+    
     @commands.Cog.listener()
     async def on_message(self, message):
         channel = message.channel
