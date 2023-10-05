@@ -105,7 +105,7 @@ class logger(commands.Cog):  # create a class for our cog that inherits from com
             thread = await channel.create_thread(name = username, content = thread_message)
             with sqlite3.connect(database) as conn:
                 cur = conn.cursor()
-                cur.execute("INSERT OR REPLACE INTO users (log_thread_id, username, discord_id) VALUES (?, ?, ?)", (thread.id, message.author.display_name, message.author.id,))
+                cur.execute("INSERT OR REPLACE INTO users (guild_id, log_thread_id, username, discord_id) VALUES (?, ?, ?, ?)", (message.guild.id, thread.id, message.author.display_name, message.author.id,))
             async with aiohttp.ClientSession() as session:
                     webhook = Webhook.from_url(log_channel_webhook, session=session)
                     await webhook.send(content = message.content, username=message.author.display_name, avatar_url=message.author.display_avatar, thread=thread, wait=True)
