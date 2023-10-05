@@ -15,9 +15,11 @@ class hyperlinker(commands.Cog):
         extractor = URLExtract()
         urls = extractor.find_urls(message.content)
         for url in urls:
+            hyperlink = f'[{url}]({url})'
             parsed_url = urlparse(url)
             github_pages = ['notifications', 'issues', 'new']
             if 'github.com' in parsed_url.netloc:
+                
                 path = parsed_url.path
                 username = parsed_url.path.split("/")[1]
                 if any(github_pages in username):
@@ -35,6 +37,7 @@ class hyperlinker(commands.Cog):
                 if branch:
                     file_path = parsed_url.path.split("/")[5]
                 message.content.replace(url, hyperlink)
+        
                 
 def setup(bot): 
     bot.add_cog(hyperlinker(bot))
