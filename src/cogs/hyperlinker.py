@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from urlextract import URLExtract
 from urllib.parse import urlparse
+import aiohttp
+from discord import Webhook
 
 class hyperlinker(commands.Cog): 
 
@@ -18,16 +20,12 @@ class hyperlinker(commands.Cog):
             hyperlink = f'[{url}]({url})'
             parsed_url = urlparse(url)
             github_pages = ['notifications', 'issues', 'new']
+            username = parsed_url.path.split("/")[1]
             if 'github.com' in parsed_url.netloc:
-                
-                path = parsed_url.path
-                username = parsed_url.path.split("/")[1]
-                if any(github_pages in username):
+                if any(x in username for x in github_pages):
                     user_only = True
-                    username = ''
                 else:
                     username = parsed_url.path.split("/")[1]
-                    
                 if username:
                     repo = parsed_url.path.split("/")[2]
                 if repo:
@@ -36,8 +34,13 @@ class hyperlinker(commands.Cog):
                     branch = parsed_url.path.split("/")[4] # replaces branch with actual branch name
                 if branch:
                     file_path = parsed_url.path.split("/")[5]
-                message.content.replace(url, hyperlink)
-        
+            message.content.replace(url, hyperlink)
+        if urls:
+            async with aiohttp.ClientSession() as session:
+                webhook = Webhook.from_url('', session=session) # todo: webhook management (make webhooks and reuse existing webhooks)
+                await webhook.send(content = message.content, username=message.author.display_name, avatar_url=message.author.display_avatar)
+        else:
+            pass
                 
 def setup(bot): 
     bot.add_cog(hyperlinker(bot))
