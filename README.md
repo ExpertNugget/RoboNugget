@@ -1,3 +1,3 @@
 # MPS
-Notice: This branch is very unstable and has many breaking updates, usually to the database, please be patient as I make this bot to be stable enough for a stable release.
-
+## Purpose of this bot
+This bot primary exists for a Discord centered comunity that has extra services outside of Discord such as a **single** Minecraft server, but for all intents this bot is a general purpose bot.
