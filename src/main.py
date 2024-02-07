@@ -90,7 +90,7 @@ async def reload(ctx, cog: discord.Option(str, choices=cog_list)):
 
 # These cogs are hard disabled due to pending work, to make them function
 
-exclude_list = ['download', 'link', 'servers', 'admin', 'hyperlinker'] 
+exclude_list = ['download', 'link', 'servers', 'admin', 'hyperlinker', 'stream'] 
 for cog in cog_list:
     # Skips cog if it's in the exclude list
     if cog in exclude_list:
