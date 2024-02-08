@@ -6,3 +6,4 @@ config.toml
 data/
 __pycache__
 pyvenv.cfg
+src/config.py
