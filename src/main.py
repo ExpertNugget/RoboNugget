@@ -8,7 +8,7 @@ from firebase_admin import credentials
 
 cred = credentials.Certificate(firebaseKey)
 databaseApp = firebase_admin.initialize_app(cred, {
-    'dataBaseURL' : dataBaseURL
+    'databaseURL' : databaseURL
 })
 
 # minor corrections for running dir, mainly for vsc
@@ -43,10 +43,11 @@ for cog in cog_list:
     # Skips cog if it's in the exclude list
     if cog in exclude_list:
         continue
-    bot.load_extension(f'cogs.{cog}')
-    #except:
-    #    print(f'Failed to load {cog}')
-    #    pass
+    try:
+        bot.load_extension(f'cogs.{cog}')
+    except:
+        print(f'Failed to load {cog}')
+        pass
 
 # moved to config.py
 bot.run(TOKEN)
