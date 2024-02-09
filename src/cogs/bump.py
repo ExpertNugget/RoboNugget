@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 import time
-from config import *
+from config import databaseURL
 from firebase_admin import db
 
 
@@ -90,16 +90,19 @@ class bump(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         channel = message.channel
+        GuildID = message.guild.id
         if message.author.id == 302050872383242240:
             for embed in message.embeds:
                 if "Bump done!" in embed.description:
-                    is_embed = 1
-                    thank_title = 'Thanks for bumping the server!'
-                    thank_description = "I'll ping @Bumper when the next bump is ready {next-bump-count}."
-                    remind_description = 'Bump the server by running </bump:947088344167366698>'
-                    remind_title = "{role} It's time to bump!"
-                    ping_role = 1
-                    role_id = '836263721281650718'
+                    ref = db.reference(path=f'/GuildID/{GuildID}/bumpConfig', url=databaseURL)
+                    raw_data = ref.get()
+                    is_embed = raw_data['is_embed']
+                    thank_title = raw_data['thank_title']
+                    thank_description = str(raw_data['thank_description'])
+                    remind_description = raw_data['remind_description']
+                    remind_title = raw_data['remind_title']
+                    ping_role = raw_data['ping_role']
+                    role_id = raw_data['role_id']
                     embed = ''
                     content = ''
                 if '{role}' in thank_description:
