@@ -3,17 +3,21 @@ from discord.ext import commands
 import sqlite3
 
 database = "./data/mpsdb.sqlite3"
+
+
 class info(commands.Cog):  # create a class for our cog that inherits from commands.Cog
     # this class is used to create a cog, which is a module that can be added to the bot
 
-    def __init__(self, bot):  # this is a special method that is called when the cog is loaded
+    def __init__(
+        self, bot
+    ):  # this is a special method that is called when the cog is loaded
         self.bot = bot
 
     info = discord.SlashCommandGroup("info")
 
     @info.command(
-        name="lookup",
-        description="[WIP] Shows all logged data on a given user")
+        name="lookup", description="[WIP] Shows all logged data on a given user"
+    )
     async def lookup(self, ctx, user: discord.Option(discord.Member) = None):
         await ctx.defer()
         if user != None:
@@ -34,15 +38,16 @@ class info(commands.Cog):  # create a class for our cog that inherits from comma
             raw_data = dict(zip(column_names, row))
 
         # Now you can access each value using its column name
-        #ex: discord_id = raw_data['discord_id']    
-        
-        
+        # ex: discord_id = raw_data['discord_id']
+
         try:
-            discord_id = raw_data['discord_id']
+            discord_id = raw_data["discord_id"]
         except:
             with sqlite3.connect(database) as conn:
                 cur = conn.cursor()
-                cur.execute("INSERT OR REPLACE INTO users (discord_id) VALUES (?)", (user.id,))
+                cur.execute(
+                    "INSERT OR REPLACE INTO users (discord_id) VALUES (?)", (user.id,)
+                )
 
         else:
             pass
@@ -79,9 +84,8 @@ class info(commands.Cog):  # create a class for our cog that inherits from comma
             colour = None
         """
         embed = discord.Embed(
-            title=f'{user.display_name}\'s Profile',
-            thumbnail=user.display_avatar.url
-            )
+            title=f"{user.display_name}'s Profile", thumbnail=user.display_avatar.url
+        )
         """
         if mcuuid != None:
             player = MCUUID(uuid=f'{mcuuid}')
