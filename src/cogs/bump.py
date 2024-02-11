@@ -89,63 +89,58 @@ class bump(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        print("listener ran")
         channel = message.channel
         GuildID = message.guild.id
-        if message.author.id == 302050872383242240:
-            for embed in message.embeds:
-                if "Bump done!" in embed.description:
-                    ref = db.reference(
-                        path=f"/GuildID/{GuildID}/bumpConfig", url=databaseURL
-                    )
-                    raw_data = ref.get()
-                    is_embed = raw_data["is_embed"]
-                    thank_title = raw_data["thank_title"]
-                    thank_description = str(raw_data["thank_description"])
-                    remind_description = raw_data["remind_description"]
-                    remind_title = raw_data["remind_title"]
-                    ping_role = raw_data["ping_role"]
-                    role_id = raw_data["role_id"]
-                    embed = ""
-                    content = ""
-                if "{role}" in thank_description:
-                    thank_description = thank_description.replace(
-                        "{role}", f"<@&{role_id}>"
-                    )
-                if "{next-bump-count}" in thank_description:
-                    current_epoch_time = int(str(int(time.time()))[:10])
-                    epoch_time_plus_two_hours = current_epoch_time + 2 * 3600
-                    thank_description = thank_description.replace(
-                        "{next-bump-count}", f"<t:{str(epoch_time_plus_two_hours)}:R>"
-                    )
-                if is_embed == 1:
-                    embed = discord.Embed(
-                        title=thank_title, description=thank_description
-                    )
-                elif is_embed == 0:
-                    if thank_title:
-                        content = thank_title + "\n" + thank_description
-                    else:
-                        content = thank_description
-
-                await channel.send(content=content, embed=embed)
-                await asyncio.sleep(7200)  # waits 2 hours and sends a followup
-
+        if not message.author.id == 302050872383242240:
+            return None
+        for embed in message.embeds:
+            if "Bump done!" in embed.description:
+                ref = db.reference(
+                    path=f"/GuildID/{GuildID}/bumpConfig", url=databaseURL
+                )
+                raw_data = ref.get()
+                is_embed = raw_data["is_embed"]
+                thank_title = raw_data["thank_title"]
+                thank_description = str(raw_data["thank_description"])
+                remind_description = raw_data["remind_description"]
+                remind_title = raw_data["remind_title"]
+                ping_role = raw_data["ping_role"]
+                role_id = raw_data["role_id"]
+                embed = ""
                 content = ""
-                if ping_role == 1:
-                    content = f"<@&{role_id}>"
-                if is_embed == 1:
-                    embed = discord.Embed(
-                        title=remind_title, description=remind_description
-                    )
-                elif is_embed == 0:
-                    if remind_title:
-                        content = (
-                            content + "\n" + remind_title + "\n" + remind_description
-                        )
-                    else:
-                        content = content + "\n" + remind_description
-
-                await channel.send(content=content, embed=embed)
+            if "{role}" in thank_description:
+                thank_description = thank_description.replace(
+                    "{role}", f"<@&{role_id}>"
+                )
+            if "{next-bump-count}" in thank_description:
+                current_epoch_time = int(str(int(time.time()))[:10])
+                epoch_time_plus_two_hours = current_epoch_time + 2 * 3600
+                thank_description = thank_description.replace(
+                    "{next-bump-count}", f"<t:{str(epoch_time_plus_two_hours)}:R>"
+                )
+            if is_embed:
+                embed = discord.Embed(title=thank_title, description=thank_description)
+            else:
+                if thank_title:
+                    content = thank_title + "\n" + thank_description
+                else:
+                    content = thank_description
+            await channel.send(content=content, embed=embed)
+            content = ""
+            await asyncio.sleep(7200)  # waits 2 hours
+            if ping_role:
+                content = f"<@&{role_id}>"
+            if is_embed:
+                embed = discord.Embed(
+                    title=remind_title, description=remind_description
+                )
+            else:
+                if remind_title:
+                    content = content + "\n" + remind_title + "\n" + remind_description
+                else:
+                    content = content + "\n" + remind_description
+            await channel.send(content=content, embed=embed)
 
 
 def setup(bot):
