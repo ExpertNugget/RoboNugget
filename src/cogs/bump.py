@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import asyncio
 import time
 from config import databaseURL
@@ -12,7 +12,6 @@ class bump(commands.Cog):
         self.bot = bot
 
     bump = discord.SlashCommandGroup("bump-config")
-
     # Keeping for refrence
     # Disabled, i'll get it working tmr -Nugget
     # @bump.command(name="remind-title")
@@ -96,19 +95,19 @@ class bump(commands.Cog):
             return None
         for embed in message.embeds:
             if "Bump done!" in embed.description:
-                ref = db.reference(
-                    path=f"/GuildID/{GuildID}/bumpConfig", url=databaseURL
-                )
-                raw_data = ref.get()
-                is_embed = raw_data["is_embed"]
-                thank_title = raw_data["thank_title"]
-                thank_description = str(raw_data["thank_description"])
-                remind_description = raw_data["remind_description"]
-                remind_title = raw_data["remind_title"]
-                ping_role = raw_data["ping_role"]
-                role_id = raw_data["role_id"]
-                embed = ""
-                content = ""
+                return None
+            ref = db.reference(path=f"/GuildID/{GuildID}/bumpConfig", url=databaseURL)
+            raw_data = ref.get()
+            is_embed = raw_data["is_embed"]
+            thank_title = raw_data["thank_title"]
+            thank_description = str(raw_data["thank_description"])
+            remind_description = raw_data["remind_description"]
+            remind_title = raw_data["remind_title"]
+            ping_role = raw_data["ping_role"]
+            role_id = raw_data["role_id"]
+            embed = ""
+            content = ""
+
             if "{role}" in thank_description:
                 thank_description = thank_description.replace(
                     "{role}", f"<@&{role_id}>"
