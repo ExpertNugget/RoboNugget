@@ -88,7 +88,6 @@ class bump(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        print("listener ran")
         ref = db.reference(path=f"/GuildID/{GuildID}/bumpConfig", url=databaseURL)
         raw_data = ref.get()
         is_enabled = raw_data["is_enabled"]
@@ -99,7 +98,7 @@ class bump(commands.Cog):
         if not message.author.id == 302050872383242240:
             return None
         for embed in message.embeds:
-            if "Bump done!" in embed.description:
+            if not "Bump done!" in embed.description:
                 return None
             is_embed = raw_data["is_embed"]
             thank_title = raw_data["thank_title"]
