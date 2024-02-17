@@ -57,24 +57,16 @@ class logger(commands.Cog):
         if not isEnabled:
             return None
         ref = db.reference(
-            path=f"/users/{userID}/{GuildID}/loggedMessages", url=databaseURL
+            path=f"/{GuildID}/{userID}/loggedMessages/{message.id}",
+            url=databaseURL,
         )
         data = {
-            message.id: {"content": message.content, "channelID": message.channel.id}
+            "content": str(message.content),
+            "channelID": str(message.channel.id),
+            "createdAt": str(message.created_at),
         }
-        ref.push(data)
+        ref.set(data)
         ### TODO: convert to new DB
-        # with sqlite3.connect(database) as conn:
-        #    cur = conn.cursor()
-        #    cur.execute(
-        #        "INSERT or IGNORE INTO logged_messages (guild_id, channel_id, message_id, message_content) VALUES (?, ?, ?, ?)",
-        #        (
-        #            message.guild.id,
-        #            message.channel.id,
-        #            message.id,
-        #            message.content,
-        #        ),
-        #    )
         # with sqlite3.connect(database) as conn:
         #    cur = conn.cursor()
         #    cur.execute(
