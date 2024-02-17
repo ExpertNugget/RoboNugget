@@ -71,7 +71,7 @@ class bump(commands.Cog):
             await channel.send(content=content, embed=embed)
 
 
-# Keeping for refrence
+# Keeping for reference
 # Disabled, i'll get it working tmr -Nugget
 # @bump.command(name="remind-title")
 # async def remind_title(self, ctx, title: discord.Option(str)):
