@@ -29,7 +29,7 @@ cog_list = [f[:-3] for f in os.listdir("./cogs") if f.endswith(".py")]
 
 @bot.slash_command(name="reload", description="[Owner Only] - Shutdown bot")
 @commands.is_owner()
-async def reload(ctx, cog: discord.Option(str, choices=cog_list)):
+async def reload(ctx, cog: discord.Option(str, choices=cog_list)):  # type: ignore
     await ctx.defer()
     # try:
     bot.reload_extension(f"cogs.{cog}")
