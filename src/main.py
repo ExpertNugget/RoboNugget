@@ -48,6 +48,7 @@ exclude_list = [
     "logger",
     "servers",
     "stream",
+    "util",
 ]
 for cog in cog_list:
     # Skips cog if it's in the exclude list
