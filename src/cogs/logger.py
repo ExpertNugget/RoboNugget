@@ -60,6 +60,7 @@ class logger(commands.Cog):
             path=f"/{GuildID}/{userID}/loggedMessages/{message.id}",
             url=databaseURL,
         )
+
         data = {
             "content": str(message.content),
             "channelID": str(message.channel.id),
