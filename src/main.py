@@ -45,7 +45,6 @@ exclude_list = [
     "hyperlinker",
     "info",
     "link",
-    "logger",
     "servers",
     "stream",
     "util",
