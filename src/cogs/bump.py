@@ -18,7 +18,10 @@ class bump(commands.Cog):
         GuildID = message.guild.id
         ref = db.reference(path=f"/GuildID/{GuildID}/bumpConfig", url=databaseURL)
         raw_data = ref.get()
-        is_enabled = raw_data["is_enabled"]
+        try:
+            is_enabled = raw_data["is_enabled"]
+        except:
+            return None
         channel = message.channel
         if not is_enabled:
             return None
@@ -71,11 +74,9 @@ class bump(commands.Cog):
             await channel.send(content=content, embed=embed)
 
 
-# Keeping for reference
-# Disabled, i'll get it working tmr -Nugget
-# @bump.command(name="remind-title")
-# async def remind_title(self, ctx, title: discord.Option(str)):
-#    await ctx.defer()
+#    @bump.command(name="remind-title")
+#    async def remind_title(self, ctx, title: discord.Option(str)):
+#        await ctx.defer()
 #    with sqlite3.connect(database) as conn:
 #        cur = conn.cursor()
 #        cur.execute("SELECT * from configs WHERE guild_id = ?", (ctx.guild.id,))
