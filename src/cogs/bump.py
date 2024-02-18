@@ -5,6 +5,7 @@ import time
 from config import databaseURL
 from firebase_admin import db
 import json
+from functions import fetchData
 
 
 class bump(commands.Cog):
@@ -20,40 +21,7 @@ class bump(commands.Cog):
             return None
         GuildID = message.guild.id
         channel = message.channel
-        ref = db.reference(path=f"/GuildID/{GuildID}/bumpConfig", url=databaseURL)
-
-        ### TODO: make this a function
-        with open("data/etagCache.json", "r") as f:
-            etagCache = json.load(f)["bumpCache"]
-
-        if not etagCache:
-            rawData, etag = ref.get(etag=True)
-            with open("data/etagCache.json", "w") as f:
-                jsonData = {
-                    "bumpCache": {
-                        "etag": etag,
-                        "json": rawData,
-                    }
-                }
-                json.dump(jsonData, f, indent=4)
-
-        else:
-            tupleData = ref.get_if_changed(etag=etagCache["etag"])
-            if tupleData[0]:
-                rawData = tupleData[1]
-                etag = tupleData[2]
-                with open("data/etagCache.json", "w") as f:
-                    jsonData = {
-                        "bumpCache": {
-                            "etag": etag,
-                            "json": rawData,
-                        }
-                    }
-                    json.dump(jsonData, f, indent=4)
-            else:
-                rawData = etagCache["json"]
-        ### ^ TODO: make this a function ^
-
+        rawData = fetchData(path=f"/{GuildID}/bumpConfig", cache="bumpCache")
         try:
             is_enabled = rawData["is_enabled"]
         except:
