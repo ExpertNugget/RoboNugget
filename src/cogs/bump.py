@@ -17,9 +17,13 @@ class bump(commands.Cog):
     async def on_message(self, message):
         GuildID = message.guild.id
         ref = db.reference(path=f"/GuildID/{GuildID}/bumpConfig", url=databaseURL)
-        raw_data = ref.get()
+        rawData = ref.get_if_changed(etag=etag)
+        if rawData[0]:
+            print("DEBUG: data changed")
+            rawData = rawData[1]
+            etag = rawData[2]
         try:
-            is_enabled = raw_data["is_enabled"]
+            is_enabled = rawData["is_enabled"]
         except:
             return None
         channel = message.channel
