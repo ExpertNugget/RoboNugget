@@ -34,13 +34,13 @@ class bump(commands.Cog):
         for embed in message.embeds:
             if not "Bump done!" in embed.description:
                 return None
-            is_embed = raw_data["is_embed"]
-            thank_title = raw_data["thank_title"]
-            thank_description = str(raw_data["thank_description"])
-            remind_description = raw_data["remind_description"]
-            remind_title = raw_data["remind_title"]
-            ping_role = raw_data["ping_role"]
-            role_id = raw_data["role_id"]
+            is_embed = rawData["is_embed"]
+            thank_title = rawData["thank_title"]
+            thank_description = str(rawData["thank_description"])
+            remind_description = rawData["remind_description"]
+            remind_title = rawData["remind_title"]
+            ping_role = rawData["ping_role"]
+            role_id = rawData["role_id"]
             embed = ""
             content = ""
 
