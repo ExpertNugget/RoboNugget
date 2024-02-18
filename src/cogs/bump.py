@@ -16,38 +16,40 @@ class bump(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-
+        if not message.author.id == 302050872383242240:
+            return None
         GuildID = message.guild.id
+        channel = message.channel
         ref = db.reference(path=f"/GuildID/{GuildID}/bumpConfig", url=databaseURL)
 
         ### TODO: make this a function
-        with open("src/data/etagCache.json", "r") as f:
+        with open("data/etagCache.json", "r") as f:
             etagCache = json.load(f)["bumpCache"]
 
         if not etagCache:
             rawData, etag = ref.get(etag=True)
-            with open("src/data/etagCache.json", "w") as f:
-                json = {
+            with open("data/etagCache.json", "w") as f:
+                jsonData = {
                     "bumpCache": {
                         "etag": etag,
                         "json": rawData,
                     }
                 }
-                json.dump(json, f, indent=4)
+                json.dump(jsonData, f, indent=4)
 
         else:
-            rawData = ref.get_if_changed(etag=etagCache["etag"])
-            if rawData["0"]:
-                rawData = rawData["1"]
-                etag = rawData["2"]
-                with open("src/data/etagCache.json", "w") as f:
-                    json = {
+            tupleData = ref.get_if_changed(etag=etagCache["etag"])
+            if tupleData[0]:
+                rawData = tupleData[1]
+                etag = tupleData[2]
+                with open("data/etagCache.json", "w") as f:
+                    jsonData = {
                         "bumpCache": {
                             "etag": etag,
                             "json": rawData,
                         }
                     }
-                    json.dump(json, f, indent=4)
+                    json.dump(jsonData, f, indent=4)
             else:
                 rawData = etagCache["json"]
         ### ^ TODO: make this a function ^
@@ -56,11 +58,10 @@ class bump(commands.Cog):
             is_enabled = rawData["is_enabled"]
         except:
             return None
-        channel = message.channel
+
         if not is_enabled:
             return None
-        if not message.author.id == 302050872383242240:
-            return None
+
         for embed in message.embeds:
             if not "Bump done!" in embed.description:
                 return None
