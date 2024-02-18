@@ -4,6 +4,7 @@ import asyncio
 import time
 from config import databaseURL
 from firebase_admin import db
+import json
 
 
 class bump(commands.Cog):
@@ -15,13 +16,42 @@ class bump(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+
         GuildID = message.guild.id
         ref = db.reference(path=f"/GuildID/{GuildID}/bumpConfig", url=databaseURL)
-        rawData = ref.get_if_changed(etag=etag)
-        if rawData[0]:
-            print("DEBUG: data changed")
-            rawData = rawData[1]
-            etag = rawData[2]
+
+        ### TODO: make this a function
+        with open("src/data/etagCache.json", "r") as f:
+            etagCache = json.load(f)["bumpCache"]
+
+        if not etagCache:
+            rawData, etag = ref.get(etag=True)
+            with open("src/data/etagCache.json", "w") as f:
+                json = {
+                    "bumpCache": {
+                        "etag": etag,
+                        "json": rawData,
+                    }
+                }
+                json.dump(json, f, indent=4)
+
+        else:
+            rawData = ref.get_if_changed(etag=etagCache["etag"])
+            if rawData["0"]:
+                rawData = rawData["1"]
+                etag = rawData["2"]
+                with open("src/data/etagCache.json", "w") as f:
+                    json = {
+                        "bumpCache": {
+                            "etag": etag,
+                            "json": rawData,
+                        }
+                    }
+                    json.dump(json, f, indent=4)
+            else:
+                rawData = etagCache["json"]
+        ### ^ TODO: make this a function ^
+
         try:
             is_enabled = rawData["is_enabled"]
         except:
