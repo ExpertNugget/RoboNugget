@@ -4,7 +4,6 @@ import asyncio
 import time
 from config import databaseURL
 from firebase_admin import db
-import json
 from functions import fetchData
 
 
@@ -22,63 +21,60 @@ class bump(commands.Cog):
         GuildID = message.guild.id
         channel = message.channel
         rawData = fetchData(path=f"/{GuildID}/bumpConfig", cache="bumpCache")
+        print("debug\n", rawData)
         try:
-            is_enabled = rawData["is_enabled"]
+            isEnabled = rawData["isEnabled"]
         except:
             return None
 
-        if not is_enabled:
+        if not isEnabled:
             return None
 
         for embed in message.embeds:
             if not "Bump done!" in embed.description:
                 return None
-            is_embed = rawData["is_embed"]
-            thank_title = rawData["thank_title"]
-            thank_description = str(rawData["thank_description"])
-            remind_description = rawData["remind_description"]
-            remind_title = rawData["remind_title"]
-            ping_role = rawData["ping_role"]
-            role_id = rawData["role_id"]
+            isEmbed = rawData["isEmbed"]
+            thankTitle = rawData["thankTitle"]
+            thankDesc = str(rawData["thankDesc"])
+            remindDesc = rawData["remindDesc"]
+            remindTitle = rawData["remindTitle"]
+            pingRole = rawData["pingRole"]
+            roleID = rawData["roleID"]
             embed = ""
             content = ""
 
-            if "{role}" in thank_description:
-                thank_description = thank_description.replace(
-                    "{role}", f"<@&{role_id}>"
-                )
-            if "{next-bump-count}" in thank_description:
+            if "{role}" in thankDesc:
+                thankDesc = thankDesc.replace("{role}", f"<@&{roleID}>")
+            if "{next-bump-count}" in thankDesc:
                 current_epoch_time = int(str(int(time.time()))[:10])
                 epoch_time_plus_two_hours = current_epoch_time + 2 * 3600
-                thank_description = thank_description.replace(
+                thankDesc = thankDesc.replace(
                     "{next-bump-count}", f"<t:{str(epoch_time_plus_two_hours)}:R>"
                 )
-            if is_embed:
-                embed = discord.Embed(title=thank_title, description=thank_description)
+            if isEmbed:
+                embed = discord.Embed(title=thankTitle, description=thankDesc)
             else:
-                if thank_title:
-                    content = thank_title + "\n" + thank_description
+                if thankTitle:
+                    content = thankTitle + "\n" + thankDesc
                 else:
-                    content = thank_description
+                    content = thankDesc
             await channel.send(content=content, embed=embed)
             content = ""
             await asyncio.sleep(7200)  # waits 2 hours
-            if ping_role:
-                content = f"<@&{role_id}>"
-            if is_embed:
-                embed = discord.Embed(
-                    title=remind_title, description=remind_description
-                )
+            if pingRole:
+                content = f"<@&{roleID}>"
+            if isEmbed:
+                embed = discord.Embed(title=remindTitle, description=remindDesc)
             else:
-                if remind_title:
-                    content = content + "\n" + remind_title + "\n" + remind_description
+                if remindTitle:
+                    content = content + "\n" + remindTitle + "\n" + remindDesc
                 else:
-                    content = content + "\n" + remind_description
+                    content = content + "\n" + remindDesc
             await channel.send(content=content, embed=embed)
 
 
 #    @bump.command(name="remind-title")
-#    async def remind_title(self, ctx, title: discord.Option(str)):
+#    async def remindTitle(self, ctx, title: discord.Option(str)):
 #        await ctx.defer()
 #    with sqlite3.connect(database) as conn:
 #        cur = conn.cursor()
@@ -93,44 +89,44 @@ class bump(commands.Cog):
 #        if role.id == staff_id:
 #            with sqlite3.connect(database) as conn:
 #                cur = conn.cursor()
-#                cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, remind_title) VALUES (?, ?)", (ctx.guild.id, title,))
+#                cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, remindTitle) VALUES (?, ?)", (ctx.guild.id, title,))
 #            await ctx.respond(f'Set remind title to "{title}"')
 #        else:
 #            pass
 # @bump.command(name="remind-description")
-# async def remind_description(self, ctx, description: discord.Option(str)):
+# async def remindDesc(self, ctx, description: discord.Option(str)):
 #    await ctx.defer()
 #    with sqlite3.connect(database) as conn:
 #        cur = conn.cursor()
-#        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, remind_description) VALUES (?, ?)", (ctx.guild.id, description,))
+#        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, remindDesc) VALUES (?, ?)", (ctx.guild.id, description,))
 #    await ctx.respond(f'Set remind description to "{description}"')
 #
 # @bump.command(name="thank-title")
-# async def thank_title(self, ctx, title: discord.Option(str)):
+# async def thankTitle(self, ctx, title: discord.Option(str)):
 #    await ctx.defer()
 #    with sqlite3.connect(database) as conn:
 #        cur = conn.cursor()
-#        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, thank_title) VALUES (?, ?)", (ctx.guild.id, title,))
+#        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, thankTitle) VALUES (?, ?)", (ctx.guild.id, title,))
 #    await ctx.respond(f'Set thank title to "{title}"')
 #
 # @bump.command(name="thank-description")
-# async def thank_description(self, ctx, description: discord.Option(str)):
+# async def thankDesc(self, ctx, description: discord.Option(str)):
 #    await ctx.defer()
 #    with sqlite3.connect(database) as conn:
 #        cur = conn.cursor()
-#        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, thank_description) VALUES (?, ?)", (ctx.guild.id, description,))
+#        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, thankDesc) VALUES (?, ?)", (ctx.guild.id, description,))
 #    await ctx.respond(f'Set remind description to "{description}"')
 #
 # @bump.command(name="embed")
 # async def embed(self, ctx, embeds: discord.Option(str, choices=["enabled", "disabled"])):
 #    await ctx.defer()
 #    if embeds == "enabled":
-#        is_embed=1
+#        isEmbed=1
 #    else:
-#        is_embed=0
+#        isEmbed=0
 #    with sqlite3.connect(database) as conn:
 #        cur = conn.cursor()
-#        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, is_embed) VALUES (?, ?)", (ctx.guild.id, is_embed,))
+#        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, isEmbed) VALUES (?, ?)", (ctx.guild.id, isEmbed,))
 #    await ctx.respond(f'Embeds are now {embeds}')
 #
 #
@@ -139,7 +135,7 @@ class bump(commands.Cog):
 #    await ctx.defer()
 #    with sqlite3.connect(database) as conn:
 #        cur = conn.cursor()
-#        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, remind_description) VALUES (?, ?)", (ctx.guild.id, description,))
+#        cur.execute("INSERT OR REPLACE INTO bumpconfigs (guild_id, remindDesc) VALUES (?, ?)", (ctx.guild.id, description,))
 #    await ctx.respond(f'Set remind description to "{description}"')
 # Disabled, i'll get it working tmr -Nugget
 
