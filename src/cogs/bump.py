@@ -1,9 +1,7 @@
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 import asyncio
 import time
-from config import databaseURL
-from firebase_admin import db
 from functions import fetchData
 
 
@@ -21,7 +19,6 @@ class bump(commands.Cog):
         GuildID = message.guild.id
         channel = message.channel
         rawData = fetchData(path=f"/{GuildID}/bumpConfig", cache="bumpCache")
-        print("debug\n", rawData)
         try:
             isEnabled = rawData["isEnabled"]
         except:
