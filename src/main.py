@@ -31,11 +31,11 @@ cog_list = [f[:-3] for f in os.listdir("./cogs") if f.endswith(".py")]
 @commands.is_owner()
 async def reload(ctx, cog: discord.Option(str, choices=cog_list)):  # type: ignore
     await ctx.defer()
-    # try:
-    bot.reload_extension(f"cogs.{cog}")
-    await ctx.respond(f"`{cog}.py` has been reloaded :)")
-    # except:
-    #    await ctx.respond(f'`{cog}.py` has failed to reload :(')
+    try:
+        bot.reload_extension(f"cogs.{cog}")
+        await ctx.respond(f"`{cog}.py` has been reloaded :)")
+    except:
+        await ctx.respond(f"`{cog}.py` has failed to reload :(")
 
 
 # These cogs are hard disabled due to pending work, to make them function
@@ -45,6 +45,7 @@ exclude_list = [
     "hyperlinker",
     "info",
     "link",
+    "rewards",
     "servers",
     "stream",
     "util",
