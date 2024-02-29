@@ -3,12 +3,13 @@ import discord
 from discord.ext import commands
 from config import *
 import firebase_admin
-from firebase_admin import credentials
+from firebase_admin import credentials, db
 
-
-cred = credentials.Certificate(firebaseKey)
-databaseApp = firebase_admin.initialize_app(cred, {"databaseURL": databaseURL})
-
+try:
+    cred = credentials.Certificate(firebaseKey) 
+    databaseApp = firebase_admin.initialize_app(cred, {"databaseURL": databaseURL})
+except:
+    print('no db')
 # minor corrections for running dir, mainly for vsc
 if "/src" in os.getcwd():
     pass
