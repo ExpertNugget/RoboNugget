@@ -71,7 +71,7 @@ class ButtonRoleCog(commands.Cog):
         """Slash command to post a new view with a button for each role."""
 
         # timeout is None because we want this view to be persistent.
-        view = discord.ui.View(timeout=None, custom_id="verificationButton")
+        view = discord.ui.View(timeout=None)
 
         # Loop through the list of roles and add a new button to the view for each role.
         for role_id in role_ids:
