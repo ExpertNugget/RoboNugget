@@ -5,11 +5,10 @@ from config import *
 import firebase_admin
 from firebase_admin import credentials, db
 
-try:
-    cred = credentials.Certificate(firebaseKey) 
-    databaseApp = firebase_admin.initialize_app(cred, {"databaseURL": databaseURL})
-except:
-    print('no db')
+
+# cred = credentials.Certificate(firebaseKey) 
+# databaseApp = firebase_admin.initialize_app(cred, {"databaseURL": databaseURL})
+
 # minor corrections for running dir, mainly for vsc
 if "/src" in os.getcwd():
     pass
@@ -65,7 +64,7 @@ for cog in cog_list:
 bot.run(TOKEN)
 # TODO first time setup for config.py
 
-# Keeping for refrence
+# Keeping for reference
 # keeps asking for a token until a valid token is provided
 # while True:
 #    try:
