@@ -22,7 +22,7 @@ class RoleButton(discord.ui.Button):
         super().__init__(
             label='verify',
             style=discord.ButtonStyle.primary,
-            custom_id=str(role.id),
+            custom_id='verificationButton',
         )
 
     async def callback(self, interaction: discord.Interaction):
@@ -71,7 +71,7 @@ class ButtonRoleCog(commands.Cog):
         """Slash command to post a new view with a button for each role."""
 
         # timeout is None because we want this view to be persistent.
-        view = discord.ui.View(timeout=None)
+        view = discord.ui.View(timeout=None, custom_id="verificationButton")
 
         # Loop through the list of roles and add a new button to the view for each role.
         for role_id in role_ids:
