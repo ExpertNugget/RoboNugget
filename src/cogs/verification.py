@@ -1,4 +1,3 @@
-
 ## IMPORTANT I have no idea really how this all works straight from pycords example scripts -nugget
 import discord
 from discord.ext import commands
@@ -56,7 +55,7 @@ class RoleButton(discord.ui.Button):
             pass
 
 
-class ButtonRoleCog(commands.Cog):
+class verification(commands.Cog):
     """
     A cog with a slash command for posting the message with buttons
     and to initialize the view again when the bot is restarted.
@@ -101,4 +100,4 @@ class ButtonRoleCog(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(ButtonRoleCog(bot))
+    bot.add_cog(verification(bot))
