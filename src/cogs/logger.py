@@ -2,13 +2,14 @@ import discord
 from discord.ext import commands
 from config import databaseURL
 from firebase_admin import db
+from discord.commands import SlashCommandGroup
 
 
 class logger(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    logger = discord.SlashCommandGroup("logger")
+    logger = SlashCommandGroup("logger")
 
     ### TODO: convert to new DB
     # @commands.message_command(name="message source")

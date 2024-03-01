@@ -55,6 +55,7 @@ exclude_list = [
     "link",  # surely with the new db this'll be easy, but need to get mc back to worry about it -nugget
     "rewards",  # Looking to locally store a user points while they are active, then send to db when they A: go inactive for an hour or B: theres a query (from here or if i implement from streamerbot likely needs a api). -
     "servers",  # Empty cog -nugget
+    # "setup",  # current task -nugget
     "stream",  # Empty cog -nugget
     "util",  # Empty cog -nugget
     "verification",  # All sorts of broken, probably not gonna implement. -nugget
@@ -65,11 +66,12 @@ for cog in cog_list:
     # Skips cog if it's in the exclude list -nugget
     if cog in exclude_list:
         continue
-    try:
-        bot.load_extension(f"cogs.{cog}")
-    except:
-        print(f"Failed to load {cog}")
-        pass
+    bot.load_extension(f"cogs.{cog}")
+    # try:
+    #    bot.load_extension(f"cogs.{cog}")
+    # except:
+    #    print(f"Failed to load {cog}")
+    #    pass
 
 bot.run(TOKEN)
 
