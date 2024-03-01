@@ -12,16 +12,16 @@ Make sure to load this cog when your bot starts!
 """
 
 # This is the list of role IDs that will be added as buttons.
-role_ids = [1212566034104713286] # yea yea ew hard coded idc -nugget
+role_ids = [1212566034104713286]  # yea yea ew hard coded idc -nugget
 
 
 class RoleButton(discord.ui.Button):
     def __init__(self, role: discord.Role):
         """A button for one role. `custom_id` is needed for persistent views."""
         super().__init__(
-            label='verify',
+            label="verify",
             style=discord.ButtonStyle.primary,
-            custom_id='verificationButton',
+            custom_id="verificationButton",
         )
 
     async def callback(self, interaction: discord.Interaction):
@@ -77,7 +77,7 @@ class verification(commands.Cog):
             # Get the role from the guild by ID.
             role = ctx.guild.get_role(role_id)
             view.add_item(RoleButton(role))
-        embed= discord.Embed(title="Click on the button below to verify!")
+        embed = discord.Embed(title="Click on the button below to verify!")
         await ctx.send(embed=embed, view=view)
 
     @commands.Cog.listener()
