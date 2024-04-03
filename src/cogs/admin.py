@@ -13,9 +13,10 @@ class admin(commands.Cog):
     admin = discord.SlashCommandGroup("admin")
 
     @admin.command(name="set-staff-role")
-    @commands.has_permissions(
-        admin=True
-    )  ### this isn't working for some reason, will figure out tmr -Nugget
+    @commands.has_permissions(admin=True)
+    ###> TODO Figure out wtf this comment is about heh -nugget
+    ### this isn't working for some reason, will figure out tmr -Nugget
+    ###! -nugget
     async def set_staff(self, ctx, role: discord.Option(discord.Role)):
         await ctx.defer()
         with sqlite3.connect(database) as conn:

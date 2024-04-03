@@ -57,7 +57,7 @@ class bump(commands.Cog):
                     content = thankDesc
             await channel.send(content=content, embed=embed)
             content = ""
-            await asyncio.sleep(7200)  # waits 2 hours
+            await asyncio.sleep(7200)
             if pingRole:
                 content = f"<@&{roleID}>"
             if isEmbed:

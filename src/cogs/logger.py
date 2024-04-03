@@ -11,7 +11,7 @@ class logger(commands.Cog):
 
     logger = SlashCommandGroup("logger")
 
-    ### TODO: convert to new DB
+    ###> TODO: convert to new DB
     # @commands.message_command(name="message source")
     # async def message_source(self, ctx, message: discord.Message):
     #    await ctx.defer
@@ -42,6 +42,7 @@ class logger(commands.Cog):
     #        for row in rows:
     #            config_dict = dict(zip(column_names, row))
     #    channel = self.bot.get_channel(config_dict["log_channel_id"])
+    ###! -nugget
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
@@ -68,7 +69,7 @@ class logger(commands.Cog):
             "createdAt": str(message.created_at),
         }
         ref.set(data)
-        ### TODO: convert to new DB
+        ###> TODO: convert to new DB
         # with sqlite3.connect(database) as conn:
         #    cur = conn.cursor()
         #    cur.execute(
@@ -93,6 +94,7 @@ class logger(commands.Cog):
         #    log_channel_webhook = config_dict["log_channel_webhook"]
         # if not logChannelID:
         #    return
+        ###! -nugget
 
 
 #
