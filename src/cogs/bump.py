@@ -1,8 +1,5 @@
-import discord
+import discord, asyncio, time, requests
 from discord.ext import commands
-import asyncio
-import time
-from functions import fetchData
 
 
 class bump(commands.Cog):
@@ -14,13 +11,16 @@ class bump(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if not message.author.id == 302050872383242240:
-            return None
+        # if not message.author.id == 302050872383242240:
+        #   return None
         GuildID = message.guild.id
         channel = message.channel
-        rawData = fetchData(path=f"/{GuildID}/bumpConfig", cache="bumpCache")
+        bumpConfig = requests.get(
+            f"http://127.0.0.1:8000/discordConfig/{str(GuildID)}/bumpConfig"
+        ).text
+        print(bumpConfig)
         try:
-            isEnabled = rawData["isEnabled"]
+            isEnabled = bumpConfig["isEnabled"]
         except:
             return None
 
@@ -30,13 +30,13 @@ class bump(commands.Cog):
         for embed in message.embeds:
             if not "Bump done!" in embed.description:
                 return None
-            isEmbed = rawData["isEmbed"]
-            thankTitle = rawData["thankTitle"]
-            thankDesc = str(rawData["thankDesc"])
-            remindDesc = rawData["remindDesc"]
-            remindTitle = rawData["remindTitle"]
-            pingRole = rawData["pingRole"]
-            roleID = rawData["roleID"]
+            isEmbed = bumpConfig["isEmbed"]
+            thankTitle = bumpConfig["thankTitle"]
+            thankDesc = bumpConfig["thankDesc"]
+            remindDesc = bumpConfig["remindDesc"]
+            remindTitle = bumpConfig["remindTitle"]
+            pingRole = bumpConfig["pingRole"]
+            roleID = bumpConfig["roleID"]
             embed = ""
             content = ""
 
