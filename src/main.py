@@ -1,18 +1,5 @@
-import os
-import discord
+import discord, requests, os
 from discord.ext import commands
-from config import TOKEN
-
-###> Dont remove they will be used -nugget
-import firebase_admin
-from firebase_admin import credentials, db
-
-###! -nugget
-
-###> firebase was being weird, will just use main db when ready -nugget
-# cred = credentials.Certificate(firebaseKey)
-# databaseApp = firebase_admin.initialize_app(cred, {"databaseURL": databaseURL})
-###! -nugget
 
 ###> minor corrections for running dir, mainly for vsc -nugget
 if "/src" in os.getcwd():
@@ -56,42 +43,28 @@ exclude_list = [
     "link",  # surely with the new db this'll be easy, but need to get mc back to worry about it -nugget
     "rewards",  # Looking to locally store a user points while they are active, then send to db when they A: go inactive for an hour or B: theres a query (from here or if i implement from streamerbot likely needs a api). -
     "servers",  # Empty cog -nugget
-    # "settings",  # current task -nugget
+    "settings",  # merging dev to main then trying to implement -nugget
     "stream",  # Empty cog -nugget
     "util",  # Empty cog -nugget
     "verification",  # All sorts of broken, probably not gonna implement. -nugget
+    "voice",  # broked -nugget
 ]
 ###! -nugget
 
 for cog in cog_list:
     ###> Skips cog if it's in the exclude list -nugget
     if cog in exclude_list:
-        continue
+        continue  # moves onto next cog
     ###! -nugget
-    bot.load_extension(f"cogs.{cog}")
-    # try:
-    #    bot.load_extension(f"cogs.{cog}")
-    # except:
-    #    print(f"Failed to load {cog}")
-    #    pass
+    ###> Attempts to load cogs and doesn't load if it fails -nugget
+    try:
+        bot.load_extension(f"cogs.{cog}")  # loads cog -nugget
+    except:
+        print(f"Failed to load {cog}")
+        pass  # moves onto next cog -nugget
 
-bot.run(TOKEN)
-
-### TODO first time setup for config.py -nugget
-# Keeping for reference
-# keeps asking for a token until a valid token is provided
-# while True:
-#    try:
-#        with sqlite3.connect(database) as conn:
-#            cur = conn.cursor()
-#            cur.execute("SELECT token FROM token;")
-#            TOKEN = cur.fetchone()
-#        bot.run(TOKEN[0])
-#        break
-#    except Exception as e:  # Catch all exceptions
-#        print(f"An error occurred: {e}")
-#        TOKEN = input("Invalid token, enter Discord bot token:")
-#        with sqlite3.connect(database) as conn:
-#            cur = conn.cursor()
-#            cur.execute("INSERT INTO token (token) VALUES (?);", (TOKEN,))
-### -nugget
+bot.run(
+    requests.get("http://127.0.0.1:8000/discordConfig/dev/discordToken").text.strip(
+        '"'
+    )  # strips quotes because they break the token -nugget
+)
