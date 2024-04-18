@@ -1,4 +1,4 @@
-import discord, asyncio, time, requests
+import discord, asyncio, time, requests, json
 from discord.ext import commands
 
 
@@ -11,14 +11,15 @@ class bump(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        # if not message.author.id == 302050872383242240:
-        #   return None
+        if not message.author.id == 302050872383242240:
+            return None
         GuildID = message.guild.id
         channel = message.channel
         bumpConfig = requests.get(
             f"http://127.0.0.1:8000/discordConfig/{str(GuildID)}/bumpConfig"
         ).text
-        print(bumpConfig)
+        dict = json.loads(bumpConfig)
+        bumpConfig = dict["bumpConfig"]
         try:
             isEnabled = bumpConfig["isEnabled"]
         except:
@@ -144,4 +145,5 @@ class bump(commands.Cog):
 # otherwise just send the reminder
 # todo
 def setup(bot):
+
     bot.add_cog(bump(bot))
