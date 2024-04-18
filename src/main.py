@@ -23,7 +23,7 @@ cog_list = [f[:-3] for f in os.listdir("./cogs") if f.endswith(".py")]
 ###! -nugget
 
 
-@bot.slash_command(name="reload", description="[Owner Only] - Shutdown bot")
+@bot.slash_command(name="reload", description="[Owner Only] - Reloads a cog")
 @commands.is_owner()
 async def reload(ctx, cog=discord.Option(str, choices=cog_list)):
     await ctx.defer()
@@ -56,12 +56,13 @@ for cog in cog_list:
     if cog in exclude_list:
         continue  # moves onto next cog
     ###! -nugget
+    bot.load_extension(f"cogs.{cog}")  # loads cog -nugget
     ###> Attempts to load cogs and doesn't load if it fails -nugget
-    try:
-        bot.load_extension(f"cogs.{cog}")  # loads cog -nugget
-    except:
-        print(f"Failed to load {cog}")
-        pass  # moves onto next cog -nugget
+    # try:
+    #    bot.load_extension(f"cogs.{cog}")  # loads cogs -nugget
+    # except:
+    #    print(f"Failed to load {cog}")
+    #    pass  # moves onto next cog -nugget
 
 bot.run(
     requests.get("http://127.0.0.1:8000/discordConfig/dev/discordToken").text.strip(
