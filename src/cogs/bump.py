@@ -1,8 +1,5 @@
-import discord
+import discord, asyncio, time, requests, json
 from discord.ext import commands
-import asyncio
-import time
-from functions import fetchData
 
 
 class bump(commands.Cog):
@@ -18,9 +15,13 @@ class bump(commands.Cog):
             return None
         GuildID = message.guild.id
         channel = message.channel
-        rawData = fetchData(path=f"/{GuildID}/bumpConfig", cache="bumpCache")
+        bumpConfig = requests.get(
+            f"http://127.0.0.1:8000/discordConfig/{str(GuildID)}/bumpConfig"
+        ).text
+        dict = json.loads(bumpConfig)
+        bumpConfig = dict["bumpConfig"]
         try:
-            isEnabled = rawData["isEnabled"]
+            isEnabled = bumpConfig["isEnabled"]
         except:
             return None
 
@@ -30,13 +31,13 @@ class bump(commands.Cog):
         for embed in message.embeds:
             if not "Bump done!" in embed.description:
                 return None
-            isEmbed = rawData["isEmbed"]
-            thankTitle = rawData["thankTitle"]
-            thankDesc = str(rawData["thankDesc"])
-            remindDesc = rawData["remindDesc"]
-            remindTitle = rawData["remindTitle"]
-            pingRole = rawData["pingRole"]
-            roleID = rawData["roleID"]
+            isEmbed = bumpConfig["isEmbed"]
+            thankTitle = bumpConfig["thankTitle"]
+            thankDesc = bumpConfig["thankDesc"]
+            remindDesc = bumpConfig["remindDesc"]
+            remindTitle = bumpConfig["remindTitle"]
+            pingRole = bumpConfig["pingRole"]
+            roleID = bumpConfig["roleID"]
             embed = ""
             content = ""
 
@@ -57,7 +58,7 @@ class bump(commands.Cog):
                     content = thankDesc
             await channel.send(content=content, embed=embed)
             content = ""
-            await asyncio.sleep(7200)  # waits 2 hours
+            await asyncio.sleep(7200)
             if pingRole:
                 content = f"<@&{roleID}>"
             if isEmbed:
@@ -144,4 +145,5 @@ class bump(commands.Cog):
 # otherwise just send the reminder
 # todo
 def setup(bot):
+
     bot.add_cog(bump(bot))
