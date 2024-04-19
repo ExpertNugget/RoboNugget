@@ -1,7 +1,5 @@
 import discord
 from discord.ext import commands
-from config import databaseURL
-from firebase_admin import db
 from discord.commands import SlashCommandGroup
 
 
