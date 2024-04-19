@@ -65,7 +65,7 @@ for cog in cog_list:
     #    pass  # moves onto next cog -nugget
 
 bot.run(
-    requests.get("http://127.0.0.1:8000/discordConfig/dev/discordToken").text.strip(
+    requests.get("http://127.0.0.1:8000/discordConfig/main/discordToken").text.strip(
         '"'
     )  # strips quotes because they break the token -nugget
 )
