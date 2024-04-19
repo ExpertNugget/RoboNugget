@@ -28,10 +28,12 @@ class bump(commands.Cog):
 
         if not isEnabled:
             return None
-
+        print("checking for embeds")
         for embed in message.embeds:
+            print("embed found! Checking for bump")
             if not "Bump done!" in embed.description:
                 return None
+            print("bump found!")
             isEmbed = bool(bumpConfig["isEmbed"])
             thankTitle = str(bumpConfig["thankTitle"])
             thankDesc = str(bumpConfig["thankDesc"])
@@ -41,22 +43,33 @@ class bump(commands.Cog):
             roleID = int(bumpConfig["roleID"])
             embed = ""
             content = ""
-
+            print("checking for ping")
             if "{role}" in thankDesc:
+                print("ping found")
                 thankDesc = thankDesc.replace("{role}", f"<@&{roleID}>")
+            else:
+                print("ping not found")
+            print("checking for next bump")
             if "{next-bump-count}" in thankDesc:
+                print("next bump found")
                 current_epoch_time = int(str(int(time.time()))[:10])
                 epoch_time_plus_two_hours = current_epoch_time + 2 * 3600
                 thankDesc = thankDesc.replace(
                     "{next-bump-count}", f"<t:{str(epoch_time_plus_two_hours)}:R>"
                 )
+            else:
+                print("next bump not found")
+            print("checking if embed")
             if isEmbed:
+                print("is embed")
                 embed = discord.Embed(title=thankTitle, description=thankDesc)
             else:
+                print("is not embed")
                 if thankTitle:
                     content = thankTitle + "\n" + thankDesc
                 else:
                     content = thankDesc
+            print("sending message")
             await channel.send(content=content, embed=embed)
             content = ""
             await asyncio.sleep(7200)
