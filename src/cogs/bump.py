@@ -11,8 +11,9 @@ class bump(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if not message.author.id == 302050872383242240:
-            return None
+
+        # if not message.author.id == 302050872383242240:
+        #    return None
         GuildID = message.guild.id
         channel = message.channel
         bumpConfig = requests.get(
@@ -31,13 +32,13 @@ class bump(commands.Cog):
         for embed in message.embeds:
             if not "Bump done!" in embed.description:
                 return None
-            isEmbed = bumpConfig["isEmbed"]
-            thankTitle = bumpConfig["thankTitle"]
-            thankDesc = bumpConfig["thankDesc"]
-            remindDesc = bumpConfig["remindDesc"]
-            remindTitle = bumpConfig["remindTitle"]
-            pingRole = bumpConfig["pingRole"]
-            roleID = bumpConfig["roleID"]
+            isEmbed = bool(bumpConfig["isEmbed"])
+            thankTitle = str(bumpConfig["thankTitle"])
+            thankDesc = str(bumpConfig["thankDesc"])
+            remindDesc = str(bumpConfig["remindDesc"])
+            remindTitle = str(bumpConfig["remindTitle"])
+            pingRole = int(bumpConfig["pingRole"])
+            roleID = int(bumpConfig["roleID"])
             embed = ""
             content = ""
 
