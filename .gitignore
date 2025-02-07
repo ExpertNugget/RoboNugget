@@ -10,3 +10,4 @@ src/config.py
 .local/
 .cache/
 Scripts/
+src/data
