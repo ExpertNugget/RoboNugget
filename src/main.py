@@ -63,9 +63,5 @@ for cog in cog_list:
     # except:
     #    print(f"Failed to load {cog}")
     #    pass  # moves onto next cog -nugget
-
-bot.run(
-    requests.get("http://127.0.0.1:8000/discordConfig/main/discordToken").text.strip(
-        '"'
-    )  # strips quotes because they break the token -nugget
-)
+with open("data/token.txt", "r") as token:
+    bot.run(token.read())  # runs bot
