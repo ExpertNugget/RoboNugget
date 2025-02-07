@@ -63,5 +63,5 @@ for cog in cog_list:
     # except:
     #    print(f"Failed to load {cog}")
     #    pass  # moves onto next cog -nugget
-with open("data/token.txt", "r") as token:
+with open("data/token-dev.txt", "r") as token:
     bot.run(token.read())  # runs bot
