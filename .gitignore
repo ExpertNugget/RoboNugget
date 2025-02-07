@@ -9,3 +9,4 @@ pyvenv.cfg
 src/config.py
 .local/
 .cache/
+Scripts/
