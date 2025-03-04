@@ -38,7 +38,7 @@ async def reload(ctx, cog=discord.Option(str, choices=cog_list)):
 exclude_list = [
     "admin",  # just unfinished, might make a cog just for configs -nugget
     "download",  # Gotta get MC server up again to worry about this (also may want to modify so the seed and new chunks are incorrect) -nugget
-    "hyperlinker",  # semi functional, should look for api's to see if i can make it less jank and use the current as a backup if api fails -nugget
+    #"hyperlinker",  # semi functional, should look for api's to see if i can make it less jank and use the current as a backup if api fails -nugget
     "info",  # need to migrate to new DB, and figure out organization (prob gonna move over to document db instead of json tree) -nugget
     "link",  # surely with the new db this'll be easy, but need to get mc back to worry about it -nugget
     "rewards",  # Looking to locally store a user points while they are active, then send to db when they A: go inactive for an hour or B: theres a query (from here or if i implement from streamerbot likely needs a api). -
