@@ -1,5 +1,9 @@
-import discord, requests, os
+import discord, requests, os, argparse
 from discord.ext import commands
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-dev", action="store_true")
+args = parser.parse_args()  
 
 ###> minor corrections for running dir, mainly for vsc -nugget
 if "/src" in os.getcwd():
@@ -7,6 +11,15 @@ if "/src" in os.getcwd():
 else:
     os.chdir("./src")
 ###! -nugget
+
+if args.dev:
+    with open("data/token-dev.txt", "r") as f:
+        token = f.read()
+else:
+    with open("data/token.txt", "r") as f:
+        token = f.read()
+
+
 
 ###> having all intents just makes life easy, will change later -nugget
 bot = discord.Bot(intents=discord.Intents.all())
@@ -38,7 +51,7 @@ async def reload(ctx, cog=discord.Option(str, choices=cog_list)):
 exclude_list = [
     "admin",  # just unfinished, might make a cog just for configs -nugget
     "download",  # Gotta get MC server up again to worry about this (also may want to modify so the seed and new chunks are incorrect) -nugget
-    "hyperlinker",  # semi functional, should look for api's to see if i can make it less jank and use the current as a backup if api fails -nugget
+    #"hyperlinker",  # semi functional, should look for api's to see if i can make it less jank and use the current as a backup if api fails -nugget
     "info",  # need to migrate to new DB, and figure out organization (prob gonna move over to document db instead of json tree) -nugget
     "link",  # surely with the new db this'll be easy, but need to get mc back to worry about it -nugget
     "rewards",  # Looking to locally store a user points while they are active, then send to db when they A: go inactive for an hour or B: theres a query (from here or if i implement from streamerbot likely needs a api). -
@@ -63,5 +76,5 @@ for cog in cog_list:
     # except:
     #    print(f"Failed to load {cog}")
     #    pass  # moves onto next cog -nugget
-with open("data/token.txt", "r") as token:
-    bot.run(token.read())  # runs bot
+
+bot.run(token)  # runs bot
