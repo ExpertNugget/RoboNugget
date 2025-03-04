@@ -15,42 +15,77 @@ class hyperlinker(commands.Cog):
     async def on_message(self, message):
         if message.author.bot:
             return
+
         extractor = URLExtract()
         urls = extractor.find_urls(message.content)
-        for url in urls:
-            hyperlink = f"[{url}]({url})"
-            parsed_url = urlparse(url)
-            github_pages = ["notifications", "issues", "new"]
-            username = parsed_url.path.split("/")[1]
-            if "github.com" in parsed_url.netloc:
-                if any(x in username for x in github_pages):
-                    user_only = True
-                else:
-                    username = parsed_url.path.split("/")[1]
-                if username:
-                    repo = parsed_url.path.split("/")[2]
-                if repo:
-                    branch = parsed_url.path.split("/")[3]
-                if branch:  # checks if tree or blob
-                    branch = parsed_url.path.split("/")[
-                        4
-                    ]  # replaces branch with actual branch name
-                if branch:
-                    file_path = parsed_url.path.split("/")[5]
-            message.content.replace(url, hyperlink)
-        if urls:
-            async with aiohttp.ClientSession() as session:
-                webhook = Webhook.from_url(
-                    "", session=session
-                )  # todo: webhook management (make webhooks and reuse existing webhooks)
-                await webhook.send(
-                    content=message.content,
-                    username=message.author.display_name,
-                    avatar_url=message.author.display_avatar,
-                )
-        else:
-            pass
 
+        if not urls:
+            return
+
+        modified_content = message.content
+
+        def get_github_link_type(url):
+            parsed = urlparse(url)
+            if parsed.netloc != "github.com":
+                return None
+
+            path_parts = [p for p in parsed.path.split("/") if p]
+
+            # GitHub Profile
+            if len(path_parts) == 1:
+                return f"GitHub Profile: {path_parts[0]}"
+
+            # Repository root
+            if len(path_parts) == 2:
+                return f"GitHub Repo: {path_parts[0]}/{path_parts[1]}"
+
+            # File or directory
+            if len(path_parts) >= 3 and path_parts[2] in ["blob", "tree"]:
+                branch = path_parts[3] if len(path_parts) > 3 else "main"
+                item_type = "File" if path_parts[2] == "blob" else "Directory"
+                return f"GitHub {item_type}: {path_parts[0]}/{path_parts[1]} ({branch})"
+
+            # Issues
+            if len(path_parts) >= 3 and path_parts[2] == "issues":
+                if len(path_parts) >= 4 and path_parts[3].isdigit():
+                    return f"GitHub Issue: #{path_parts[3]} in {path_parts[0]}/{path_parts[1]}"
+                return f"GitHub Issues: {path_parts[0]}/{path_parts[1]}"
+
+            # Pull Requests
+            if len(path_parts) >= 3 and path_parts[2] == "pull":
+                if len(path_parts) >= 4 and path_parts[3].isdigit():
+                    return f"GitHub Pull Request: #{path_parts[3]} in {path_parts[0]}/{path_parts[1]}"
+                return f"GitHub Pull Requests: {path_parts[0]}/{path_parts[1]}"
+
+            # Default for other GitHub URLs
+            return "GitHub Link"
+
+        for url in set(urls):
+            label = None
+            parsed = urlparse(url)
+
+            # Handle GitHub URLs
+            if "github.com" in parsed.netloc:
+                label = get_github_link_type(url)
+            # Add other platforms here (e.g., GitLab, Bitbucket)
+
+            # Default label for non-GitHub links
+            if not label:
+                domain = parsed.netloc.replace("www.", "")
+                label = f"{domain.capitalize()} Link"
+
+            hyperlink = f"[{label}]({url})"
+            modified_content = modified_content.replace(url, hyperlink)
+
+        await message.delete()
+
+        async with aiohttp.ClientSession() as session:
+            webhook = Webhook.from_url("https://discord.com/api/webhooks/1170892019665731625/SvIEhmQdTh2srcno8G-RldAF90dpgMtye3neWkXEINnnwb_HNet_EUHz0lOnf-Q9LeVk", session=session)
+            await webhook.send(
+                content=modified_content,
+                username=message.author.display_name,
+                avatar_url=message.author.display_avatar,
+            )
 
 def setup(bot):
     bot.add_cog(hyperlinker(bot))
