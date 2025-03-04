@@ -1,5 +1,9 @@
-import discord, requests, os
+import discord, requests, os, argparse
 from discord.ext import commands
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-dev", action="store_true")
+args = parser.parse_args()  
 
 ###> minor corrections for running dir, mainly for vsc -nugget
 if "/src" in os.getcwd():
@@ -7,6 +11,15 @@ if "/src" in os.getcwd():
 else:
     os.chdir("./src")
 ###! -nugget
+
+if args.dev:
+    with open("data/token-dev.txt", "r") as f:
+        token = f.read()
+else:
+    with open("data/token.txt", "r") as f:
+        token = f.read()
+
+
 
 ###> having all intents just makes life easy, will change later -nugget
 bot = discord.Bot(intents=discord.Intents.all())
@@ -63,5 +76,5 @@ for cog in cog_list:
     # except:
     #    print(f"Failed to load {cog}")
     #    pass  # moves onto next cog -nugget
-with open("data/token-dev.txt", "r") as token:
-    bot.run(token.read())  # runs bot
+
+bot.run(token)  # runs bot
