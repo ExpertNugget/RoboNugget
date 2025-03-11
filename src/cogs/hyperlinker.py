@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 import aiohttp
 from discord import Webhook
 
+
 class hyperlinker(commands.Cog):
 
     def __init__(self, bot):
@@ -80,19 +81,26 @@ class hyperlinker(commands.Cog):
         for webhook in webhooks:
             if webhook.name == "Hyperlinker":
                 webhook = webhook
-        
+
         if webhook is None:
             webhook = await message.channel.create_webhook(name="Hyperlinker")
-            
+            print("Created webhook:", webhook.name)
+            if webhook is None:
+                print("Failed to create webhook")
+                return
 
-        async with aiohttp.ClientSession() as session:
-            await webhook.send(
-                content=modified_content,
-                username=message.author.display_name,
-                avatar_url=message.author.display_avatar,
-            )
-        
-        await message.delete()
+        try:
+            async with aiohttp.ClientSession() as session:
+                await webhook.send(
+                    content=modified_content,
+                    username=message.author.display_name,
+                    avatar_url=message.author.display_avatar,
+                )
+        except Exception as e:
+            print(e)
+        else:
+            await message.delete()
+
 
 def setup(bot):
     bot.add_cog(hyperlinker(bot))
