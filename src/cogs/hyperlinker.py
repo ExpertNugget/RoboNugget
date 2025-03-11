@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 import aiohttp
 from discord import Webhook
 
-
 class hyperlinker(commands.Cog):
 
     def __init__(self, bot):
@@ -77,15 +76,27 @@ class hyperlinker(commands.Cog):
             hyperlink = f"[{label}]({url})"
             modified_content = modified_content.replace(url, hyperlink)
 
-        await message.delete()
-
-        async with aiohttp.ClientSession() as session:
-            webhook = Webhook.from_url("https://discord.com/api/webhooks/1170892019665731625/SvIEhmQdTh2srcno8G-RldAF90dpgMtye3neWkXEINnnwb_HNet_EUHz0lOnf-Q9LeVk", session=session)
-            await webhook.send(
-                content=modified_content,
-                username=message.author.display_name,
-                avatar_url=message.author.display_avatar,
-            )
+        try:
+            await message.channel.create_webhook(name="Hyperlinker")
+        except:
+            # Webhook already exists, try to get it
+            webhooks = await message.channel.webhooks()
+            for webhook in webhooks:
+                if webhook.name == "Hyperlinker":
+                    webhook = webhook
+            
+        try:
+            async with aiohttp.ClientSession() as session:
+                webhook = Webhook.from_url("https://discord.com/api/webhooks/1170892019665731625/SvIEhmQdTh2srcno8G-RldAF90dpgMtye3neWkXEINnnwb_HNet_EUHz0lOnf-Q9LeVk", session=session)
+                await webhook.send(
+                    content=modified_content,
+                    username=message.author.display_name,
+                    avatar_url=message.author.display_avatar,
+                )
+        except:
+            print("Error sending message")
+        finally:
+            await message.delete()
 
 def setup(bot):
     bot.add_cog(hyperlinker(bot))
