@@ -1,9 +1,9 @@
-import discord, requests, os, argparse
+import discord, os, argparse
 from discord.ext import commands
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-dev", action="store_true")
-args = parser.parse_args()  
+args = parser.parse_args()
 
 ###> minor corrections for running dir, mainly for vsc -nugget
 if "/src" in os.getcwd():
@@ -18,7 +18,6 @@ if args.dev:
 else:
     with open("data/token.txt", "r") as f:
         token = f.read()
-
 
 
 ###> having all intents just makes life easy, will change later -nugget
@@ -49,10 +48,10 @@ async def reload(ctx, cog=discord.Option(str, choices=cog_list)):
 
 ###> These cogs are hard disabled due to pending work, to make them function -nugget
 exclude_list = [
-    "logger", # DB removed, needs rework
+    "logger",  # DB removed, needs rework
     "admin",  # just unfinished, might make a cog just for configs -nugget
     "download",  # Gotta get MC server up again to worry about this (also may want to modify the seed so people cant cheat) -nugget
-    #"hyperlinker",  # semi functional, should look for api's to see if i can make it less jank and use the current as a backup if api fails -nugget
+    # "hyperlinker",  # semi functional, should look for api's to see if i can make it less jank and use the current as a backup if api fails -nugget
     "info",  # need to migrate to new DB, and figure out organization (prob gonna move over to document db instead of json tree) -nugget
     "link",  # surely with the new db this'll be easy, but need to get mc back to worry about it -nugget
     "rewards",  # Looking to locally store a user points while they are active, then send to db when they A: go inactive for an hour or B: theres a query (from here or if i implement from streamerbot likely needs a api). -
