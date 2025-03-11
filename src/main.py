@@ -49,8 +49,9 @@ async def reload(ctx, cog=discord.Option(str, choices=cog_list)):
 
 ###> These cogs are hard disabled due to pending work, to make them function -nugget
 exclude_list = [
+    "logger", # DB removed, needs rework
     "admin",  # just unfinished, might make a cog just for configs -nugget
-    "download",  # Gotta get MC server up again to worry about this (also may want to modify so the seed and new chunks are incorrect) -nugget
+    "download",  # Gotta get MC server up again to worry about this (also may want to modify the seed so people cant cheat) -nugget
     #"hyperlinker",  # semi functional, should look for api's to see if i can make it less jank and use the current as a backup if api fails -nugget
     "info",  # need to migrate to new DB, and figure out organization (prob gonna move over to document db instead of json tree) -nugget
     "link",  # surely with the new db this'll be easy, but need to get mc back to worry about it -nugget
