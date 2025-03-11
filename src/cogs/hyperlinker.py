@@ -86,7 +86,6 @@ class hyperlinker(commands.Cog):
             
 
         async with aiohttp.ClientSession() as session:
-            webhook = Webhook.from_url("https://discord.com/api/webhooks/1170892019665731625/SvIEhmQdTh2srcno8G-RldAF90dpgMtye3neWkXEINnnwb_HNet_EUHz0lOnf-Q9LeVk", session=session)
             await webhook.send(
                 content=modified_content,
                 username=message.author.display_name,
